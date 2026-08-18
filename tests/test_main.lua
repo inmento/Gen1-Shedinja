@@ -28,6 +28,7 @@ _G.mod = {
     constants = registry(),
     items = registry(),
     text = registry(),
+    cries = registry(),
     pokemon = registry(),
   },
   events = {
@@ -48,6 +49,14 @@ assert(shedinja.dex == 152 and shedinja.index == 152, "Shedinja dex/index mismat
 assert(shedinja.types[1] == "BUG" and shedinja.types[2] == "GHOST", "Shedinja must be Bug/Ghost")
 assert(shedinja.baseStats.hp == 1, "Shedinja must retain base HP 1")
 assert(shedinja.trueColor == true, "Shedinja sprite art must opt out of 4-shade recoloring")
+local unusedCry = assert(registered.SHEDINJA_UNUSED_CRY_43,
+  "Shedinja's dedicated unused $43 cry was not registered")
+assert(unusedCry.base == "NIDORAN_M" and unusedCry.pitch == 128 and unusedCry.length == 16,
+  "unused $43 cry must preserve base 0, pitch 128, and length 16")
+assert(shedinja.cry == "SHEDINJA_UNUSED_CRY_43",
+  "Shedinja must point only to its dedicated unused $43 cry")
+assert(registered.NIDORAN_M == nil and patched.NIDORAN_M == nil,
+  "the native base-0 Nidoran cry/species must not be modified")
 assert(type(ready) == "function", "game.ready grant handler was not registered")
 
 local game = { save = { inventory = {} } }

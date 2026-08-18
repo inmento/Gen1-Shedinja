@@ -6,6 +6,7 @@ local GameVersion = require("src.core.GameVersion")
 
 local SHEDINJA = "SHEDINJA"
 local WONDER_GUARD = "WONDER_GUARD"
+local SHEDINJA_UNUSED_CRY_43 = "SHEDINJA_UNUSED_CRY_43"
 
 local function registerContent()
   mod.content.constants:patch("dexSize", 152)
@@ -19,6 +20,15 @@ local function registerContent()
 
   mod.content.text:register("GEN1_SHEDINJA_DEX",
     "The shed skin of a bug Pokémon.\nIt is said to steal the spirit\nof anyone who looks into its\nhollow body from behind.")
+
+  -- Raw Gen 1 CryData index $43 is base cry 0, pitch $80, length $10.
+  -- Derive a new record from Nidoran♂'s imported base-0 header rather than
+  -- patching that native cry or the shared global cry-header table.
+  mod.content.cries:register(SHEDINJA_UNUSED_CRY_43, {
+    base = "NIDORAN_M",
+    pitch = 128,
+    length = 16,
+  })
 
   mod.content.pokemon:register(SHEDINJA, {
     id = SHEDINJA,
@@ -40,7 +50,7 @@ local function registerContent()
     spriteFront = "assets/sprites/shedinja_front.png",
     spriteBack = "assets/sprites/shedinja_back.png",
     trueColor = true,
-    cry = "KABUTO",
+    cry = SHEDINJA_UNUSED_CRY_43,
     level1Moves = { "SCRATCH", "HARDEN", "LEECH_LIFE" },
     learnset = {
       { level = 5, move = "SAND_ATTACK" },
@@ -92,4 +102,5 @@ return {
   SHEDINJA = SHEDINJA,
   WONDER_GUARD = WONDER_GUARD,
   grantWonderGuard = grantWonderGuard,
+  unusedCry43 = SHEDINJA_UNUSED_CRY_43,
 }

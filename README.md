@@ -1,8 +1,8 @@
 # Gen 1 Shedinja
 
-**Gen 1 Shedinja** is a standalone, Gen 1-only Gen1Recomp mod that adds Shedinja as Pokédex species **#152**. Version 0.1.2 provides normal Kanto wild encounters, transparent battle sprites, and a scoped Wonder Guard mechanic while keeping the rest of the base game intact.
+**Gen 1 Shedinja** is a standalone, Gen 1-only Gen1Recomp mod that adds Shedinja as Pokédex species **#152**. Version 0.1.3 provides normal Kanto wild encounters, transparent battle sprites, a scoped Wonder Guard mechanic, and an isolated recreation of the unused Gen 1 `$43` cry while keeping the rest of the base game intact.
 
-## Included in 0.1.2
+## Included in 0.1.3
 
 | Feature | Behavior |
 |---|---|
@@ -12,6 +12,7 @@
 | Battle art | Transparent front and back battle sprites |
 | Wonder Guard | A persistent `WONDER GUARD` Bag item is restored on game startup/load if it is missing. |
 | Damage rule | The item blocks non-super-effective direct move damage only for the player’s active Shedinja. Super-effective damage remains unchanged. |
+| Cry | A Shedinja-only cry record reproduces unused Gen 1 cry `$43`: base cry 0, pitch 128, length 16. |
 
 The mod uses the engine’s normal Gen 1 type-effectiveness calculation. As Shedinja is Bug/Ghost, any move the engine considers **super-effective against that dual type** can damage it. Wonder Guard does not protect other Pokémon, an opposing Shedinja, or typeless self-damage such as confusion damage.
 
@@ -47,7 +48,7 @@ Crystal 251 specifically owns Pokédex/index **#152** for Chikorita. This mod mu
 
 First confirm that the mod loads and that `WONDER GUARD` appears in the Bag. On Route 1, Route 4, and Victory Road, verify that Shedinja can appear at the stated approximate rarity and level range while native wild encounters still occur.
 
-Then check Shedinja’s name, #152 Pokédex identity, Bug/Ghost typing, front sprite, back sprite, HP behavior, and one save/continue cycle. For Wonder Guard, test a neutral damaging move, a resisted damaging move, a super-effective damaging move, a status move, and confusion self-damage. Only direct damaging moves that are not super-effective should be blocked. Test in both wild and trainer battles.
+Then check Shedinja’s name, #152 Pokédex identity, Bug/Ghost typing, front sprite, back sprite, cry, HP behavior, and one save/continue cycle. Shedinja’s cry is a dedicated species record derived from the imported base-0 cry header with pitch 128 and length 16; it does not replace Nidoran♂’s cry or any global cry data. For Wonder Guard, test a neutral damaging move, a resisted damaging move, a super-effective damaging move, a status move, and confusion self-damage. Only direct damaging moves that are not super-effective should be blocked. Test in both wild and trainer battles.
 
 ## Artwork attribution and license
 
@@ -59,4 +60,4 @@ See [CREDITS.md](CREDITS.md) for the complete attribution record and original so
 
 ## Scope and status
 
-This is a public **0.1.2 test release**. Please report reproducible loading, save, rendering, encounter, and battle-behavior results before further species or progression mechanics are added.
+This is a public **0.1.3 test release**. Please report reproducible loading, save, rendering, encounter, and battle-behavior results before further species or progression mechanics are added.

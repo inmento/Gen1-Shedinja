@@ -1,17 +1,15 @@
 # Changelog
 
-## 0.1.2 — Wild encounters and suite compatibility
+## 0.1.3 — Unused Gen 1 `$43` cry
 
-Shedinja now has normal wild encounter placements in three Kanto areas without changing the base encounter rate or overwriting the other native encounter slots.
+Shedinja no longer borrows Kabuto’s cry. It now uses its own species-scoped cry record that reproduces the unused Generation I CryData row `$43` exactly:
 
-| Location | Encounter path | Chance | Level range |
-|---|---|---:|---:|
-| Route 1 | Grass | 5% of eligible wild rolls | 3–5 |
-| Route 4 | Grass | 7% of eligible wild rolls | 10–12 |
-| Victory Road 1F, 2F, and 3F | Cave / indoor | 10% of eligible wild rolls | 36–38 |
+| Raw CryData field | Value |
+|---|---:|
+| Base cry | `0` |
+| Pitch | `128` (`$80`) |
+| Length | `16` (`$10`) |
 
-This release also verifies coexistence with the user’s non-dex gameplay mods. Starter Picker can expose a valid expanded-dex species only when a compatible content provider has registered it; Item Randomizer continues to exclude the non-tossable `WONDER GUARD` token from random item pools; and Gym Leader Shuffle, Randomized Gym Challenge, and Sound Effect Replacer do not overwrite Shedinja’s registry or Wonder Guard behavior.
+The new record derives from the imported base-0 cry header used by Nidoran♂ and applies the `$43` pitch and length only to Shedinja. It does **not** patch Nidoran♂, any other Pokémon’s cry, or the global cry-header table.
 
-Shedinja remains intentionally incompatible with Crystal 251, Kanto Reforged, and any other mod that claims the same Pokédex/index space or independently changes the Pokémon roster. In particular, Crystal 251 owns index #152 for Chikorita, while this standalone mod must retain Shedinja at its required #152 index.
-
-The included Shedinja sprite adaptations are credited to BouncingPiplup’s *G1SP 0292 – Shedinja*. They are distributed under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), with the required attribution and modification notice in `CREDITS.md` and `assets/sprites/LICENSE.md`.
+Shedinja remains fully standalone. Its Pokédex #152 registration, Wonder Guard inventory grant, and Route 1, Route 4, and Victory Road wild encounters do not need Starter Picker, Item Randomizer, Gym Leader Shuffle, Randomized Gym Challenge, Sound Effect Replacer, or any other mod to be installed.
