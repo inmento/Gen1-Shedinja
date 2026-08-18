@@ -1,8 +1,8 @@
 # Gen 1 Shedinja
 
-**Gen 1 Shedinja** is a standalone, Gen 1-only Gen1Recomp test mod that adds Shedinja as Pokédex species **#152**. It is an early public release intended to validate a species expansion, battle sprites, and a scoped Wonder Guard mechanic before encounter placement or other progression changes are considered.
+**Gen 1 Shedinja** is a standalone, Gen 1-only Gen1Recomp mod that adds Shedinja as Pokédex species **#152**. Version 0.1.2 provides normal Kanto wild encounters, transparent battle sprites, and a scoped Wonder Guard mechanic while keeping the rest of the base game intact.
 
-## Included in 0.1.0
+## Included in 0.1.2
 
 | Feature | Behavior |
 |---|---|
@@ -15,25 +15,39 @@
 
 The mod uses the engine’s normal Gen 1 type-effectiveness calculation. As Shedinja is Bug/Ghost, any move the engine considers **super-effective against that dual type** can damage it. Wonder Guard does not protect other Pokémon, an opposing Shedinja, or typeless self-damage such as confusion damage.
 
-## Important compatibility rule
+## Wild encounter locations
 
-This is a **standalone species expansion**. Do **not** enable it with Crystal 251, Kanto Reforged, or any other mod that changes the Pokémon roster, Pokédex, dex data, or species indices. The manifest blocks the known incompatible expansion mods, but it cannot anticipate every future dex expansion.
+The mod transforms only a small percentage of otherwise valid native wild encounters. It does not change map encounter rates, non-Shedinja encounter slots, fishing, or water encounters.
+
+| Location | Encounter path | Chance | Level range |
+|---|---|---:|---:|
+| Route 1 | Grass | 5% | 3–5 |
+| Route 4 | Grass | 7% | 10–12 |
+| Victory Road 1F, 2F, and 3F | Cave / indoor | 10% | 36–38 |
+
+## Compatibility
+
+This mod is designed to coexist with the user’s non-dex gameplay mods, including Starter Picker, Item Randomizer, Gym Leader Shuffle, Randomized Gym Challenge, and Sound Effect Replacer. For example, the non-tossable `WONDER GUARD` token is excluded from Item Randomizer’s safe random-item pools, and Gym-related mods do not overwrite the species registry or the Wonder Guard damage seam.
+
+> **Required exception:** Gym Leader Shuffle and Randomized Gym Challenge are mutually exclusive with each other because both alter the same gym scripts, trainer parties, leaders, and map/NPC state. Each remains compatible with Gen 1 Shedinja and the rest of the non-conflicting suite.
+
+## Important Pokédex-expansion rule
+
+This is a **standalone species expansion**. Do **not** enable it with Crystal 251, Kanto Reforged, or any other mod that changes the Pokémon roster, Pokédex, dex data, or species indices.
+
+Crystal 251 specifically owns Pokédex/index **#152** for Chikorita. This mod must retain Shedinja at the user-required #152 index, so those two data providers cannot safely coexist. The manifest blocks the known incompatible expansion mods, but it cannot anticipate every future dex expansion.
 
 | Supported game | Status |
 |---|---|
-| Pokémon Red / Blue / Yellow | Intended test target |
+| Pokémon Red / Blue / Yellow | Supported |
 | Pokémon Gold / Gen 2 | Not supported |
-| Crystal 251 and other roster expansions | Incompatible |
-
-## Getting Shedinja into a party
-
-This first release intentionally does **not** change wild encounters, starters, gifts, maps, or story scripts. Add `SHEDINJA` through a compatible party/content editing tool while testing. Future encounter placement should be decided only after the species data, sprites, and Wonder Guard behavior are confirmed stable.
+| Crystal 251 and same-slot roster expansions | Incompatible |
 
 ## Suggested test checklist
 
-First confirm that the mod loads and that `WONDER GUARD` appears in the Bag. Then add Shedinja to the party and verify its name, #152 Pokédex identity, Bug/Ghost typing, front sprite, back sprite, HP behavior, and one save/continue cycle.
+First confirm that the mod loads and that `WONDER GUARD` appears in the Bag. On Route 1, Route 4, and Victory Road, verify that Shedinja can appear at the stated approximate rarity and level range while native wild encounters still occur.
 
-For Wonder Guard, test a neutral damaging move, a resisted damaging move, a super-effective damaging move, a status move, and confusion self-damage. Only direct damaging moves that are not super-effective should be blocked. Test in both wild and trainer battles.
+Then check Shedinja’s name, #152 Pokédex identity, Bug/Ghost typing, front sprite, back sprite, HP behavior, and one save/continue cycle. For Wonder Guard, test a neutral damaging move, a resisted damaging move, a super-effective damaging move, a status move, and confusion self-damage. Only direct damaging moves that are not super-effective should be blocked. Test in both wild and trainer battles.
 
 ## Artwork attribution and license
 
@@ -45,4 +59,4 @@ See [CREDITS.md](CREDITS.md) for the complete attribution record and original so
 
 ## Scope and status
 
-This is a public **0.1.0 test release**, not a completed content mod. Please report reproducible loading, save, rendering, party-editing, and battle-behavior results before additional mechanics are added.
+This is a public **0.1.2 test release**. Please report reproducible loading, save, rendering, encounter, and battle-behavior results before further species or progression mechanics are added.

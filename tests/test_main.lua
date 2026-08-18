@@ -1,4 +1,4 @@
-local root = arg[1] or "."
+local root = assert(arg[1], "project root is required")
 
 local registered, patched, ready = {}, {}, nil
 local function registry()
@@ -15,6 +15,11 @@ package.preload["mods.GEN1_SHEDINJA.wonder_guard"] = function()
   return { install = function(_, shedinjaId, itemId)
     assert(shedinjaId == "SHEDINJA")
     assert(itemId == "WONDER_GUARD")
+  end }
+end
+package.preload["mods.GEN1_SHEDINJA.encounters"] = function()
+  return { install = function(_, shedinjaId)
+    assert(shedinjaId == "SHEDINJA")
   end }
 end
 
