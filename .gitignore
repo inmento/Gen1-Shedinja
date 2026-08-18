@@ -1,0 +1,5 @@
+# Locally retained intermediate artwork; only the final adapted battle sprites are published.
+assets/sprites/*_transparent_source.png
+
+# Release notes are supplied to the hosting release separately.
+RELEASE_NOTES_*.md
