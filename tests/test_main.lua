@@ -40,7 +40,9 @@ _G.mod = {
   hooks = { wrap = function() end },
 }
 
-assert(dofile(root .. "/main.lua"))
+local init = assert(dofile(root .. "/main.lua"), "Shedinja entry module did not return an initializer")
+assert(type(init) == "function", "Shedinja entry module must return an initializer")
+assert(init(_G.mod), "Shedinja initializer failed")
 assert(patched.dexSize == 152, "Pokédex size was not expanded to 152")
 assert(registered.WONDER_GUARD and registered.WONDER_GUARD.tossable == false,
   "Wonder Guard item was not registered as a persistent token")

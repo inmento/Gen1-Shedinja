@@ -2,6 +2,7 @@
 -- Standalone species-expansion test build. Do not combine with other mods that
 -- alter the species roster, Pokédex range, or dex-backed content.
 
+return function(mod)
 local GameVersion = require("src.core.GameVersion")
 
 local SHEDINJA = "SHEDINJA"
@@ -104,3 +105,4 @@ return {
   grantWonderGuard = grantWonderGuard,
   unusedCry43 = SHEDINJA_UNUSED_CRY_43,
 }
+end

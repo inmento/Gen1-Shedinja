@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5 — Loader entry-point repair
+
+This release fixes a boot failure in the published package: the entry script accessed `mod` as a global even though Gen1Recomp supplies the live mod API as an initializer argument. The error appeared as `attempt to index global 'mod' (a nil value)` and prevented all Shedinja content from loading.
+
+`main.lua` now returns the loader-compatible initializer function and receives the API explicitly. The corrected entry registers Shedinja #152, Wonder Guard, the wild encounters, and the unused Gen 1 `$43` cry through that live API. Gameplay content is otherwise unchanged.
+
 ## 0.1.4 — Index installation fix
 
 This corrective release changes the package ID to `gen1_shedinja` and aligns its internal module paths with that installed folder name. It resolves the case-sensitive index-import error that previously reported the ZIP as `GEN1_SHEDINJA` when the index expected `gen1_shedinja`.
