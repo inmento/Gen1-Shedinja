@@ -1,8 +1,8 @@
 # Gen 1 Shedinja
 
-**Gen 1 Shedinja** is a standalone, Gen 1-only Gen1Recomp mod that adds Shedinja as Pokédex species **#152**. Version 0.1.3 provides normal Kanto wild encounters, transparent battle sprites, a scoped Wonder Guard mechanic, and an isolated recreation of the unused Gen 1 `$43` cry while keeping the rest of the base game intact.
+**Gen 1 Shedinja** is a standalone, Gen 1-only Gen1Recomp mod that adds Shedinja as Pokédex species **#152**. Version 0.1.4 provides normal Kanto wild encounters, transparent battle sprites, a scoped Wonder Guard mechanic, an isolated recreation of the unused Gen 1 `$43` cry, and a corrected lowercase package identity for index installation while keeping the rest of the base game intact.
 
-## Included in 0.1.3
+## Included in 0.1.4
 
 | Feature | Behavior |
 |---|---|
@@ -60,4 +60,4 @@ See [CREDITS.md](CREDITS.md) for the complete attribution record and original so
 
 ## Scope and status
 
-This is a public **0.1.3 test release**. Please report reproducible loading, save, rendering, encounter, and battle-behavior results before further species or progression mechanics are added.
+This is a public **0.1.4 test release**. Please report reproducible loading, save, rendering, encounter, and battle-behavior results before further species or progression mechanics are added.

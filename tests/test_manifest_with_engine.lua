@@ -3,9 +3,9 @@ package.path = "/home/ubuntu/reference_gen1recomp023_source/?.lua;/home/ubuntu/r
 
 local Manifest = require("src.mods.Manifest")
 local raw = {
-  id = "GEN1_SHEDINJA",
+  id = "gen1_shedinja",
   name = "Gen 1 Shedinja",
-  version = "0.1.0-test",
+  version = "0.1.4",
   api = 2,
   entry = "main.lua",
   profile = "overhaul",
@@ -17,7 +17,7 @@ local raw = {
   description = "Standalone Gen 1 Shedinja expansion.",
 }
 local manifest = Manifest.validate(raw, root)
-assert(manifest.id == "GEN1_SHEDINJA")
+assert(manifest.id == "gen1_shedinja")
 assert(manifest.gen2compat == false,
   "manifest must remain Gen 1-only")
 assert(#manifest.conflicts == 2, "known expansion conflicts were not retained")

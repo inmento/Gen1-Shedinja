@@ -1,7 +1,7 @@
 {
-  "id": "GEN1_SHEDINJA",
+  "id": "gen1_shedinja",
   "name": "Gen 1 Shedinja",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "api": 2,
   "entry": "main.lua",
   "profile": "overhaul",

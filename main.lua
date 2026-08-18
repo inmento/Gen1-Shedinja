@@ -91,8 +91,8 @@ if GameVersion.get() == "gold" then
 end
 
 registerContent()
-require("mods.GEN1_SHEDINJA.wonder_guard").install(mod, SHEDINJA, WONDER_GUARD)
-require("mods.GEN1_SHEDINJA.encounters").install(mod, SHEDINJA)
+require("mods.gen1_shedinja.wonder_guard").install(mod, SHEDINJA, WONDER_GUARD)
+require("mods.gen1_shedinja.encounters").install(mod, SHEDINJA)
 
 mod.events:on("game.ready", function(ev)
   grantWonderGuard(ev.game)

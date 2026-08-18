@@ -11,13 +11,13 @@ end
 package.preload["src.core.GameVersion"] = function()
   return { get = function() return "red" end }
 end
-package.preload["mods.GEN1_SHEDINJA.wonder_guard"] = function()
+package.preload["mods.gen1_shedinja.wonder_guard"] = function()
   return { install = function(_, shedinjaId, itemId)
     assert(shedinjaId == "SHEDINJA")
     assert(itemId == "WONDER_GUARD")
   end }
 end
-package.preload["mods.GEN1_SHEDINJA.encounters"] = function()
+package.preload["mods.gen1_shedinja.encounters"] = function()
   return { install = function(_, shedinjaId)
     assert(shedinjaId == "SHEDINJA")
   end }

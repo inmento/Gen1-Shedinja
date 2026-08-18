@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.4 — Index installation fix
+
+This corrective release changes the package ID to `gen1_shedinja` and aligns its internal module paths with that installed folder name. It resolves the case-sensitive index-import error that previously reported the ZIP as `GEN1_SHEDINJA` when the index expected `gen1_shedinja`.
+
+Gameplay content, encounter tables, sprites, Wonder Guard behavior, and the isolated unused Gen 1 `$43` cry are unchanged.
+
 ## 0.1.3 — Unused Gen 1 `$43` cry
 
 Shedinja no longer borrows Kabuto’s cry. It now uses its own species-scoped cry record that reproduces the unused Generation I CryData row `$43` exactly:
