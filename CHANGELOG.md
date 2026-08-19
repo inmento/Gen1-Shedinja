@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.7 — Gold support, animated Crystal-style sprites, and held-item Wonder Guard
+
+Shedinja now supports **Pokémon Gold** while preserving the established Red/Blue/Yellow implementation unchanged. Gold uses a distinct Gen 2 species record at internal slot `252`, displays Shedinja as National Dex #292, uses Gen 2 split Special stats and the Erratic experience curve, and adds Route 29, Route 34, and Victory Road land encounters without replacing any native encounter table.
+
+Gold includes a credited three-frame Crystal-style front battle animation and static back sprite adapted from **nuukiie / Nuuk**. The original normal palette and included shiny palette are registered through Gold’s Pokémon palette system, so shiny coloring follows Shedinja’s actual shiny state. A two-page Gold Pokédex entry is inserted only when the custom entry is absent, avoiding a blank #292 page without replacing a native entry.
+
+Wonder Guard is now generation-specific. Red/Blue/Yellow retain the persistent non-tossable Bag token. Gold receives an equipable, non-usable Bag item that can be given through the normal **GIVE** flow; it protects only the player’s active Shedinja while that Shedinja actually holds `WONDER_GUARD`. It is intentionally tossable because Gold does not permit Give on non-tossable/key-item-style records.
+
 ## 0.1.6 — National Dex entry and text layout
 
 Shedinja now displays as its official **National Dex #292** while retaining internal species slot `152`, which remains the safe Gen 1 content identity used by encounters, battle data, and saves. The mod’s merged `dexSize` is now `292`; the Pokédex lists only registered species, so this does not create blank entries between Mew and Shedinja.

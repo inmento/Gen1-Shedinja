@@ -92,9 +92,10 @@ local function grantWonderGuard(game)
 end
 
 if GameVersion.get() == "gold" then
-  -- This test build is intentionally Gen 1-only; a Gen 2 Pokédex expansion
-  -- needs a distinct project and data model.
-  return
+  -- Gold has its own schema, palettes, held-item flow, and encounter maps.
+  -- Keep that implementation isolated so the working Gen 1 branch below is
+  -- never registered or modified during a Gold boot.
+  return require("mods.gen1_shedinja.gold").install(mod, SHEDINJA, WONDER_GUARD)
 end
 
 registerContent()

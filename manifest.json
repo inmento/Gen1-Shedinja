@@ -1,7 +1,7 @@
 {
   "id": "gen1_shedinja",
-  "name": "Gen 1 Shedinja",
-  "version": "0.1.6",
+  "name": "Shedinja",
+  "version": "0.1.7",
   "api": 2,
   "entry": "main.lua",
   "profile": "overhaul",
@@ -9,11 +9,15 @@
   "permissions": [
     "engine_internals"
   ],
+  "games": [
+    "gen1",
+    "gen2"
+  ],
   "game_version": ">=0.2.3 <1.0.0",
   "incompatible": [
     "CRYSTAL_251",
     "Kanto-Reforged"
   ],
   "affects_link": true,
-  "description": "Standalone Gen 1 Shedinja expansion: adds National Dex #292 Shedinja through internal slot 152, with a player-only Wonder Guard item. Incompatible with other Pokédex or species expansion mods."
+  "description": "Standalone Shedinja expansion for Red/Blue/Yellow and Gold: National Dex #292, generation-specific Wonder Guard, wild encounters, and credited Gen 1 or animated Gen 2 battle art. Incompatible with other Pokédex or species expansion mods."
 }

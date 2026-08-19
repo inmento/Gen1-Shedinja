@@ -1,63 +1,63 @@
-# Gen 1 Shedinja
+# Shedinja for Gen1Recomp
 
-**Gen 1 Shedinja** is a standalone, Gen 1-only Gen1Recomp mod that adds Shedinja as **National Dex #292** through safe internal Gen 1 species slot **152**. Version 0.1.6 provides normal Kanto wild encounters, transparent battle sprites, a scoped Wonder Guard mechanic, an isolated recreation of the unused Gen 1 `$43` cry, a corrected lowercase package identity for index installation, a loader-compatible entry initializer, and a properly wrapped Gen 1 Pokédex entry while keeping the rest of the base game intact.
+**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, base HP 1, generation-appropriate wild encounters, and a deliberately scoped Wonder Guard implementation. Version **0.1.7** keeps the established Gen 1 version intact and adds native Gold support, including credited Crystal-style animated front art and a runtime shiny palette.
 
-## Included in 0.1.6
+## Version 0.1.7 at a glance
 
-| Feature | Behavior |
-|---|---|
-| Species | `SHEDINJA`, National Dex #292, internal species index 152 |
-| Typing | Bug/Ghost |
-| Base HP | 1 |
-| Battle art | Transparent front and back battle sprites |
-| Wonder Guard | A persistent `WONDER GUARD` Bag item is restored on game startup/load if it is missing. |
-| Damage rule | The item blocks non-super-effective direct move damage only for the player’s active Shedinja. Super-effective damage remains unchanged. |
-| Cry | A Shedinja-only cry record reproduces unused Gen 1 cry `$43`: base cry 0, pitch 128, length 16. |
+| Game | Internal species slot | National Dex number | Battle art | Wonder Guard model |
+|---|---:|---:|---|---|
+| Red / Blue / Yellow | 152 | 292 | Transparent Gen 1-style front and back sprites | Persistent Bag token; protects the player’s active Shedinja while the token is in the Bag. |
+| Gold | 252 | 292 | Credited Crystal-style three-frame front animation, static back sprite, normal palette, and shiny palette | Equipable held item; protects the player’s active Shedinja only while it holds `WONDER GUARD`. |
 
-The mod uses the engine’s normal Gen 1 type-effectiveness calculation. As Shedinja is Bug/Ghost, any move the engine considers **super-effective against that dual type** can damage it. Wonder Guard does not protect other Pokémon, an opposing Shedinja, or typeless self-damage such as confusion damage.
+> **Important:** Gold’s `WONDER GUARD` is a normal non-usable Bag item so that Gold’s native **GIVE** action can equip it. The item may therefore be taken or discarded normally. It is granted again only when it is missing from the Bag on a later startup or load.
+
+## Core behavior
+
+Shedinja is Bug/Ghost with base stats of HP 1, Attack 90, Defense 45, Speed 40, Special Attack 30, and Special Defense 30 in Gold. Gold uses the Erratic experience curve, an `EGG_MINERAL` breeding group, and the following level-up moves: Scratch, Harden, Leech Life, Sand Attack, Fury Swipes, Mind Reader, Spite, Confuse Ray, Shadow Ball, and Grudge.
+
+Wonder Guard uses the game’s normal type-effectiveness result. It blocks only direct, non-super-effective move damage and only for the **player’s active Shedinja**. It does not protect an opposing Shedinja, another species, an inactive party member, or typeless self-damage such as confusion. In Gold, the protection additionally requires Shedinja to be holding the `WONDER GUARD` item.
+
+Gen 1 preserves Shedinja’s isolated recreation of unused Gen 1 cry `$43`: base cry `0`, pitch `128`, and length `16`. The cry is species-scoped and does not change Nidoran♂ or any global cry data.
 
 ## Wild encounter locations
 
-The mod transforms only a small percentage of otherwise valid native wild encounters. It does not change map encounter rates, non-Shedinja encounter slots, fishing, or water encounters.
+The mod locally transforms only a small percentage of valid native land encounters. It does not replace native encounter rates, non-Shedinja slots, fishing, or water encounters.
 
-| Location | Encounter path | Chance | Level range |
-|---|---|---:|---:|
-| Route 1 | Grass | 5% | 3–5 |
-| Route 4 | Grass | 7% | 10–12 |
-| Victory Road 1F, 2F, and 3F | Cave / indoor | 10% | 36–38 |
+| Game | Location | Encounter path | Chance | Level range |
+|---|---|---|---:|---:|
+| Red / Blue / Yellow | Route 1 | Grass | 5% | 3–5 |
+| Red / Blue / Yellow | Route 4 | Grass | 7% | 10–12 |
+| Red / Blue / Yellow | Victory Road 1F, 2F, and 3F | Cave / indoor | 10% | 36–38 |
+| Gold | Route 29 | Land | 5% | 3–5 |
+| Gold | Route 34 | Land | 7% | 10–12 |
+| Gold | Victory Road | Land / cave | 10% | 36–38 |
+
+## Gold sprite, shiny, and Pokédex support
+
+Gold’s front sprite plays the three supplied Crystal animation frames once when Shedinja appears in battle, using the original 6/32/10-tick timing and then holding the final frame. Its back sprite remains static, matching the supplied Crystal source data. The art is stored as four palette-indexed grayscale shades; Gen1Recomp automatically selects the included normal or shiny palette from the Pokémon’s actual shiny state.
+
+Gold also inserts a Shedinja entry into its `gen2Pokedex` data at game-ready time, allowing National Dex #292, height, weight, and a correctly fitted two-page entry to appear without replacing a native species entry.
 
 ## Compatibility
 
-This mod is designed to coexist with the user’s non-dex gameplay mods, including Starter Picker, Item Randomizer, Gym Leader Shuffle, Randomized Gym Challenge, and Sound Effect Replacer. For example, the non-tossable `WONDER GUARD` token is excluded from Item Randomizer’s safe random-item pools, and Gym-related mods do not overwrite the species registry or the Wonder Guard damage seam.
+This mod is designed to coexist with the user’s non-roster gameplay mods, including Starter Picker, Item Randomizer, Gym Leader Shuffle, Randomized Gym Challenge, and Sound Effect Replacer. It is standalone: none of those mods is required for Shedinja to load, appear, receive Wonder Guard, or display its Dex content.
 
-> **Required exception:** Gym Leader Shuffle and Randomized Gym Challenge are mutually exclusive with each other because both alter the same gym scripts, trainer parties, leaders, and map/NPC state. Each remains compatible with Gen 1 Shedinja and the rest of the non-conflicting suite.
+> **Required exception:** Do not enable Shedinja alongside Crystal 251, Kanto Reforged, or any other mod that changes the Pokémon roster, Pokédex range, species indexes, or Dex-entry data. Red/Blue/Yellow use Shedinja’s internal index `152`; Gold uses `252`. A separate expansion that owns either index or replaces Dex records can create invalid species or save data.
 
-## Important Pokédex-expansion rule
-
-This is a **standalone species expansion**. Do **not** enable it with Crystal 251, Kanto Reforged, or any other mod that changes the Pokémon roster, Pokédex, dex data, or species indices.
-
-Crystal 251 specifically owns internal species index **152** for Chikorita, which it displays as Pokédex #152. This mod must retain Shedinja at internal index 152 even though Shedinja displays as National Dex #292, so those two data providers cannot safely coexist. The manifest blocks the known incompatible expansion mods, but it cannot anticipate every future dex expansion.
-
-| Supported game | Status |
-|---|---|
-| Pokémon Red / Blue / Yellow | Supported |
-| Pokémon Gold / Gen 2 | Not supported |
-| Crystal 251 and same-slot roster expansions | Incompatible |
+Gym Leader Shuffle and Randomized Gym Challenge remain mutually exclusive with each other because they edit the same gym content, but either may be used with Shedinja when enabled alone.
 
 ## Suggested test checklist
 
-First confirm that the mod loads and that `WONDER GUARD` appears in the Bag. On Route 1, Route 4, and Victory Road, verify that Shedinja can appear at the stated approximate rarity and level range while native wild encounters still occur.
+Confirm that the mod boots, Shedinja appears at the stated locations, and native encounters still occur. Check its name, National Dex #292 presentation, Bug/Ghost typing, base HP, sprite art, and one save/continue cycle in each supported game.
 
-Then check Shedinja’s name, National Dex #292 display, internal-index behavior, Bug/Ghost typing, front sprite, back sprite, cry, HP behavior, and one save/continue cycle. Confirm that its Pokédex description stays on one readable four-line page without clipping or overflow. Shedinja’s cry is a dedicated species record derived from the imported base-0 cry header with pitch 128 and length 16; it does not replace Nidoran♂’s cry or any global cry data. For Wonder Guard, test a neutral damaging move, a resisted damaging move, a super-effective damaging move, a status move, and confusion self-damage. Only direct damaging moves that are not super-effective should be blocked. Test in both wild and trainer battles.
+For Gen 1, confirm that `WONDER GUARD` appears in the Bag and test neutral, resisted, super-effective, status, and confusion damage in wild and trainer battles. For Gold, give `WONDER GUARD` to Shedinja through the Bag’s **GIVE** action, then repeat those battle checks both before and after taking the item away. Also check normal and shiny art if a shiny Shedinja is available, the one-pass front animation, the static back art, and the two-page Gold Pokédex entry.
 
-## Artwork attribution and license
+## Artwork attribution and licenses
 
-The included front and back battle sprites are adaptations of **“G1SP 0292 – Shedinja”** by **BouncingPiplup**. The artist notes that the source artwork was influenced by SharkGuy’s version, with personal adjustments.
+The Gen 1 front and back sprites are adaptations of **“G1SP 0292 – Shedinja”** by **BouncingPiplup**, distributed under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/). The Gen 2 front animation and back sprite are adapted from **“GSC Shedinja”** by **nuukiie** (Nuuk), used and edited for non-commercial purposes with credit under the artist’s stated terms.
 
-The modifications for this mod remove the background, prepare transparent PNGs, and resize/crop them for the 56×56 front and 48×48 Gen1Recomp battle-sprite targets. The adapted sprite files in `assets/sprites/` are released under [Creative Commons Attribution-ShareAlike 3.0 Unported](https://creativecommons.org/licenses/by-sa/3.0/). Attribution, the license link, and an indication of any further changes must be retained when those assets are shared or adapted. This credit does not imply artist endorsement of the mod.
-
-See [CREDITS.md](CREDITS.md) for the complete attribution record and original source link.
+See [CREDITS.md](CREDITS.md) for the complete source links, attribution details, and the modifications made to both asset sets. Neither artist’s credit implies endorsement of this mod.
 
 ## Scope and status
 
-This is a public **0.1.6 test release**. Please report reproducible loading, save, rendering, encounter, and battle-behavior results before further species or progression mechanics are added.
+This is a public **0.1.7 test release**. Please report reproducible loading, save, rendering, animation, encounter, Pokédex, and battle-behavior results before further species or progression mechanics are added.

@@ -24,12 +24,12 @@ local function chooseLevel(rng, placement)
   return rng(low, high)
 end
 
-function Encounters.install(mod, speciesId)
+local function installPlacements(mod, speciesId, placements)
   mod.hooks:wrap("encounter.species", function(next, encounter, ctx)
     encounter = next(encounter, ctx)
     if type(encounter) ~= "table" or type(ctx) ~= "table" then return encounter end
 
-    local placement = PLACEMENTS[ctx.mapId]
+    local placement = placements[ctx.mapId]
     if not placement or placement.terrain ~= ctx.terrain then return encounter end
 
     local rng = ctx.rng
@@ -41,6 +41,24 @@ function Encounters.install(mod, speciesId)
     replacement.shedinjaEncounter = true
     return replacement
   end, 25)
+end
+
+function Encounters.install(mod, speciesId)
+  installPlacements(mod, speciesId, PLACEMENTS)
+end
+
+-- Gold uses the same species-transform hook but categorizes every land roll,
+-- including cave floors, as terrain "grass". The map IDs and levels below are
+-- therefore a distinct Gen 2 placement table rather than a patch to any native
+-- Gold encounter rate or time-of-day slot.
+local GOLD_PLACEMENTS = {
+  ROUTE_29 = { terrain = "grass", chance = 5, minLevel = 3, maxLevel = 5 },
+  ROUTE_34 = { terrain = "grass", chance = 7, minLevel = 10, maxLevel = 12 },
+  VICTORY_ROAD = { terrain = "grass", chance = 10, minLevel = 36, maxLevel = 38 },
+}
+
+function Encounters.installGold(mod, speciesId)
+  installPlacements(mod, speciesId, GOLD_PLACEMENTS)
 end
 
 return Encounters
