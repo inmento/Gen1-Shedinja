@@ -1,7 +1,7 @@
 {
   "id": "gen1_shedinja",
   "name": "Shedinja",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "github": "inmento/Gen1-Shedinja",
   "api": 2,
   "entry": "main.lua",
@@ -20,13 +20,18 @@
       "range": ">=0.1.1 <1.0.0",
       "games": ["gen2"],
       "github": "inmento/Shedinja-Expanded-Bridge"
+    },
+    {
+      "id": "CRYSTAL_251",
+      "range": ">=0.11.3 <1.0.0",
+      "games": ["gen1"],
+      "github": "Deftones565/gen1recomp-mod-crystal-251"
     }
   ],
   "game_version": ">=0.2.3 <1.0.0",
   "incompatible": [
-    "CRYSTAL_251",
     "Kanto-Reforged"
   ],
   "affects_link": true,
-  "description": "Standalone Shedinja expansion for Red/Blue/Yellow and Gold: National Dex #292, generation-specific Wonder Guard, wild encounters, credited Gen 1/animated Gen 2 art, and an optional Gold Expanded Species bridge."
+  "description": "Standalone Shedinja expansion for Red/Blue/Yellow and Gold: National Dex #292, generation-specific Wonder Guard, wild encounters, credited Gen 1/animated Gen 2 art, plus optional Gold Expanded Species and Gen 1 Crystal 251 compatibility paths."
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.12 — Crystal 251 coexistence
+
+Core Shedinja is no longer blocked when **Crystal 251** is active in Red, Blue, or Yellow. It recognizes Crystal 251 as a Gen 1-only optional ordering source and selects internal species index **252** instead of the standalone index 152 that Crystal uses for Chikorita. Shedinja remains National Dex **#292**.
+
+For Crystal’s split-stat battle and summary systems, install the separate **Shedinja Crystal 251 Bridge**. That companion supplies Shedinja’s Crystal-era split stats and genderless metadata, retains the non-conflicting index and sparse #292 Dex range, and hard-requires both compatible core Shedinja and Crystal 251. Gold’s separate Expanded Species bridge remains unchanged.
+
 ## 0.1.11 — Launcher update metadata repair
 
 This small release restores one missing manifest field: the core mod now declares its own public GitHub repository. Gen1Recomp’s **Update** and **Versions** flow reads the installed mod manifest to locate release updates; the personal index already knew the repository, but the installed Shedinja manifest did not. This correction allows launcher-driven updates from the index without changing gameplay, sprites, encounters, Wonder Guard, or the Expanded Species bridge behavior.

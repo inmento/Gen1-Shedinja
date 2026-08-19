@@ -1,12 +1,12 @@
 # Shedinja for Gen1Recomp
 
-**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, base HP 1, generation-appropriate wild encounters, and a deliberately scoped Wonder Guard implementation. Version **0.1.7** keeps the established Gen 1 version intact and adds native Gold support, including credited Crystal-style animated front art and a runtime shiny palette.
+**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, base HP 1, generation-appropriate wild encounters, and a deliberately scoped Wonder Guard implementation. Version **0.1.12** also provides optional bridge paths for Crystal 251 in R/B/Y and Expanded Species in Gold, while preserving standalone behavior in every supported game.
 
-## Version 0.1.7 at a glance
+## Version 0.1.12 at a glance
 
 | Game | Internal species slot | National Dex number | Battle art | Wonder Guard model |
 |---|---:|---:|---|---|
-| Red / Blue / Yellow | 152 | 292 | Transparent Gen 1-style front and back sprites | Persistent Bag token; protects the player’s active Shedinja while the token is in the Bag. |
+| Red / Blue / Yellow | 152 standalone; 252 with active Crystal 251 | 292 | Transparent Gen 1-style front and back sprites | Persistent Bag token; protects the player’s active Shedinja while the token is in the Bag. |
 | Gold | 252 | 292 | Credited Crystal-style three-frame front animation, static back sprite, normal palette, and shiny palette | Equipable held item; protects the player’s active Shedinja only while it holds `WONDER GUARD`. |
 
 > **Important:** Gold’s `WONDER GUARD` is a normal non-usable Bag item so that Gold’s native **GIVE** action can equip it. The item may therefore be taken or discarded normally. It is granted again only when it is missing from the Bag on a later startup or load.
@@ -42,7 +42,7 @@ Gold also inserts a Shedinja entry into its `gen2Pokedex` data at game-ready tim
 
 This mod is designed to coexist with the user’s non-roster gameplay mods, including Starter Picker, Item Randomizer, Gym Leader Shuffle, Randomized Gym Challenge, and Sound Effect Replacer. It is standalone: none of those mods is required for Shedinja to load, appear, receive Wonder Guard, or display its Dex content.
 
-> **Required exception:** Do not enable Shedinja alongside Crystal 251, Kanto Reforged, or any other mod that changes the Pokémon roster, Pokédex range, species indexes, or Dex-entry data. Red/Blue/Yellow use Shedinja’s internal index `152`; Gold uses `252`. A separate expansion that owns either index or replaces Dex records can create invalid species or save data.
+> **Roster-expansion guidance:** Crystal 251 is supported in Red, Blue, and Yellow with core Shedinja 0.1.12+ and the separate [Shedinja Crystal 251 Bridge](https://github.com/inmento/Shedinja-Crystal-251-Bridge/releases). The bridge moves Shedinja to internal index `252`, retains National Dex #292, and supplies Crystal-specific split-stat metadata. In Gold, use the separate [Shedinja Expanded Bridge](https://github.com/inmento/Shedinja-Expanded-Bridge/releases) only with Expanded Species. **Kanto Reforged** and unrelated roster/Dex/index-overhaul mods remain unsupported unless they provide their own dedicated compatibility bridge.
 
 Gym Leader Shuffle and Randomized Gym Challenge remain mutually exclusive with each other because they edit the same gym content, but either may be used with Shedinja when enabled alone.
 
@@ -60,4 +60,4 @@ See [CREDITS.md](CREDITS.md) for the complete source links, attribution details,
 
 ## Scope and status
 
-This is a public **0.1.7 test release**. Please report reproducible loading, save, rendering, animation, encounter, Pokédex, and battle-behavior results before further species or progression mechanics are added.
+This is a public **0.1.12** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, and battle-behavior results before further species or progression mechanics are added.

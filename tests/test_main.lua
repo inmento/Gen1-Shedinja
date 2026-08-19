@@ -33,6 +33,7 @@ end
 
 _G.mod = {
   path = root,
+  find = function() return nil end,
   content = {
     constants = registry(),
     items = registry(),

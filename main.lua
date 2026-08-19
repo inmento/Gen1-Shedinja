@@ -10,9 +10,12 @@ local WONDER_GUARD = "WONDER_GUARD"
 local SHEDINJA_UNUSED_CRY_43 = "SHEDINJA_UNUSED_CRY_43"
 
 local function registerContent()
-  -- Keep the internal species slot at 152 while presenting Shedinja at its
-  -- official National Pokédex position. The menu scans to this merged limit
-  -- but only shows registered species, so no blank #152–291 entries appear.
+  -- Standalone Gen 1 uses the first post-Kanto slot (152). Crystal 251 fills
+  -- every internal slot through Celebi at 251, so its active optional bridge
+  -- moves Shedinja to the first non-conflicting slot, 252. Both paths retain
+  -- the official visible National Dex number #292.
+  local crystal251 = mod.find("CRYSTAL_251")
+  local speciesIndex = crystal251 and 252 or 152
   mod.content.constants:patch("dexSize", 292)
 
   mod.content.items:register(WONDER_GUARD, {
@@ -48,7 +51,7 @@ local function registerContent()
 
   mod.content.pokemon:register(SHEDINJA, {
     id = SHEDINJA,
-    index = 152,
+    index = speciesIndex,
     dex = 292,
     name = "SHEDINJA",
     types = { "BUG", "GHOST" },
