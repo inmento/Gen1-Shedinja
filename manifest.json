@@ -1,7 +1,7 @@
 {
   "id": "gen1_shedinja",
   "name": "Shedinja",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "api": 2,
   "entry": "main.lua",
   "profile": "overhaul",
@@ -12,6 +12,14 @@
   "games": [
     "gen1",
     "gen2"
+  ],
+  "optional_dependencies": [
+    {
+      "id": "shedinja_expanded_bridge",
+      "range": ">=0.1.1 <1.0.0",
+      "games": ["gen2"],
+      "github": "inmento/Shedinja-Expanded-Bridge"
+    }
   ],
   "game_version": ">=0.2.3 <1.0.0",
   "incompatible": [

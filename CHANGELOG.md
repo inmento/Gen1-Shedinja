@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.10 — Current-API bridge relationship
+
+After validation against Gen1Recomp **0.2.10**, core Shedinja now declares the public Shedinja Expanded Bridge as a **Gold-only optional dependency** with a direct GitHub source. Shedinja remains independently installable and fully functional in Red, Blue, Yellow, and standalone Gold. When the bridge is installed and active in Gold, the loader orders it after core Shedinja without creating a circular hard-dependency block.
+
 ## 0.1.9 — Gen 1 party and PC icon fix
 
 Gen 1 party, PC, and selection menus use a dedicated two-frame icon sheet rather than the front battle sprite. Shedinja now registers a 16×32 static icon derived from its credited Gen 1 front artwork and maps that icon directly to the Shedinja species record. Oak, Pokédex, summary, battle, encounter, Wonder Guard, and starter behavior are otherwise unchanged.
