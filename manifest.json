@@ -1,7 +1,7 @@
 {
   "id": "gen1_shedinja",
   "name": "Gen 1 Shedinja",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "api": 2,
   "entry": "main.lua",
   "profile": "overhaul",
@@ -15,5 +15,5 @@
     "Kanto-Reforged"
   ],
   "affects_link": true,
-  "description": "Standalone Gen 1 Shedinja expansion: adds species 152 and a player-only Wonder Guard item. Incompatible with other Pokédex or species expansion mods."
+  "description": "Standalone Gen 1 Shedinja expansion: adds National Dex #292 Shedinja through internal slot 152, with a player-only Wonder Guard item. Incompatible with other Pokédex or species expansion mods."
 }

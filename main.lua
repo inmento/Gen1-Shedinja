@@ -10,7 +10,10 @@ local WONDER_GUARD = "WONDER_GUARD"
 local SHEDINJA_UNUSED_CRY_43 = "SHEDINJA_UNUSED_CRY_43"
 
 local function registerContent()
-  mod.content.constants:patch("dexSize", 152)
+  -- Keep the internal species slot at 152 while presenting Shedinja at its
+  -- official National Pokédex position. The menu scans to this merged limit
+  -- but only shows registered species, so no blank #152–291 entries appear.
+  mod.content.constants:patch("dexSize", 292)
 
   mod.content.items:register(WONDER_GUARD, {
     id = WONDER_GUARD,
@@ -19,8 +22,11 @@ local function registerContent()
     tossable = false,
   })
 
+  -- The Gen 1 Dex page has an 18-character-wide description field. Explicit
+  -- line breaks keep this Bulbapedia-derived summary inside its four-line page.
+  -- DexEntryMenu supplies the final full stop to the last line.
   mod.content.text:register("GEN1_SHEDINJA_DEX",
-    "The shed skin of a bug Pokémon.\nIt is said to steal the spirit\nof anyone who looks into its\nhollow body from behind.")
+    "HOLLOW BUG SHELL.\nLEGEND SAYS IT\nSTEALS THE SPIRIT\nOF THOSE WHO PEEK")
 
   -- Raw Gen 1 CryData index $43 is base cry 0, pitch $80, length $10.
   -- Derive a new record from Nidoran♂'s imported base-0 header rather than
@@ -34,7 +40,7 @@ local function registerContent()
   mod.content.pokemon:register(SHEDINJA, {
     id = SHEDINJA,
     index = 152,
-    dex = 152,
+    dex = 292,
     name = "SHEDINJA",
     types = { "BUG", "GHOST" },
     baseStats = {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.6 — National Dex entry and text layout
+
+Shedinja now displays as its official **National Dex #292** while retaining internal species slot `152`, which remains the safe Gen 1 content identity used by encounters, battle data, and saves. The mod’s merged `dexSize` is now `292`; the Pokédex lists only registered species, so this does not create blank entries between Mew and Shedinja.
+
+Its Gen 1 Pokédex description is now an explicitly wrapped, single four-line page based on Bulbapedia’s Ruby-era lore summary. Each line fits the entry page’s 18-character text field, preventing clipping or an unintended second page.
+
 ## 0.1.5 — Loader entry-point repair
 
 This release fixes a boot failure in the published package: the entry script accessed `mod` as a global even though Gen1Recomp supplies the live mod API as an initializer argument. The error appeared as `attempt to index global 'mod' (a nil value)` and prevented all Shedinja content from loading.

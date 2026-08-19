@@ -1,12 +1,12 @@
 # Gen 1 Shedinja
 
-**Gen 1 Shedinja** is a standalone, Gen 1-only Gen1Recomp mod that adds Shedinja as Pokédex species **#152**. Version 0.1.5 provides normal Kanto wild encounters, transparent battle sprites, a scoped Wonder Guard mechanic, an isolated recreation of the unused Gen 1 `$43` cry, a corrected lowercase package identity for index installation, and a loader-compatible entry initializer while keeping the rest of the base game intact.
+**Gen 1 Shedinja** is a standalone, Gen 1-only Gen1Recomp mod that adds Shedinja as **National Dex #292** through safe internal Gen 1 species slot **152**. Version 0.1.6 provides normal Kanto wild encounters, transparent battle sprites, a scoped Wonder Guard mechanic, an isolated recreation of the unused Gen 1 `$43` cry, a corrected lowercase package identity for index installation, a loader-compatible entry initializer, and a properly wrapped Gen 1 Pokédex entry while keeping the rest of the base game intact.
 
-## Included in 0.1.5
+## Included in 0.1.6
 
 | Feature | Behavior |
 |---|---|
-| Species | `SHEDINJA`, Pokédex #152, species index 152 |
+| Species | `SHEDINJA`, National Dex #292, internal species index 152 |
 | Typing | Bug/Ghost |
 | Base HP | 1 |
 | Battle art | Transparent front and back battle sprites |
@@ -36,7 +36,7 @@ This mod is designed to coexist with the user’s non-dex gameplay mods, includi
 
 This is a **standalone species expansion**. Do **not** enable it with Crystal 251, Kanto Reforged, or any other mod that changes the Pokémon roster, Pokédex, dex data, or species indices.
 
-Crystal 251 specifically owns Pokédex/index **#152** for Chikorita. This mod must retain Shedinja at the user-required #152 index, so those two data providers cannot safely coexist. The manifest blocks the known incompatible expansion mods, but it cannot anticipate every future dex expansion.
+Crystal 251 specifically owns internal species index **152** for Chikorita, which it displays as Pokédex #152. This mod must retain Shedinja at internal index 152 even though Shedinja displays as National Dex #292, so those two data providers cannot safely coexist. The manifest blocks the known incompatible expansion mods, but it cannot anticipate every future dex expansion.
 
 | Supported game | Status |
 |---|---|
@@ -48,7 +48,7 @@ Crystal 251 specifically owns Pokédex/index **#152** for Chikorita. This mod mu
 
 First confirm that the mod loads and that `WONDER GUARD` appears in the Bag. On Route 1, Route 4, and Victory Road, verify that Shedinja can appear at the stated approximate rarity and level range while native wild encounters still occur.
 
-Then check Shedinja’s name, #152 Pokédex identity, Bug/Ghost typing, front sprite, back sprite, cry, HP behavior, and one save/continue cycle. Shedinja’s cry is a dedicated species record derived from the imported base-0 cry header with pitch 128 and length 16; it does not replace Nidoran♂’s cry or any global cry data. For Wonder Guard, test a neutral damaging move, a resisted damaging move, a super-effective damaging move, a status move, and confusion self-damage. Only direct damaging moves that are not super-effective should be blocked. Test in both wild and trainer battles.
+Then check Shedinja’s name, National Dex #292 display, internal-index behavior, Bug/Ghost typing, front sprite, back sprite, cry, HP behavior, and one save/continue cycle. Confirm that its Pokédex description stays on one readable four-line page without clipping or overflow. Shedinja’s cry is a dedicated species record derived from the imported base-0 cry header with pitch 128 and length 16; it does not replace Nidoran♂’s cry or any global cry data. For Wonder Guard, test a neutral damaging move, a resisted damaging move, a super-effective damaging move, a status move, and confusion self-damage. Only direct damaging moves that are not super-effective should be blocked. Test in both wild and trainer battles.
 
 ## Artwork attribution and license
 
@@ -60,4 +60,4 @@ See [CREDITS.md](CREDITS.md) for the complete attribution record and original so
 
 ## Scope and status
 
-This is a public **0.1.5 test release**. Please report reproducible loading, save, rendering, encounter, and battle-behavior results before further species or progression mechanics are added.
+This is a public **0.1.6 test release**. Please report reproducible loading, save, rendering, encounter, and battle-behavior results before further species or progression mechanics are added.

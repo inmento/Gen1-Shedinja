@@ -43,12 +43,25 @@ _G.mod = {
 local init = assert(dofile(root .. "/main.lua"), "Shedinja entry module did not return an initializer")
 assert(type(init) == "function", "Shedinja entry module must return an initializer")
 assert(init(_G.mod), "Shedinja initializer failed")
-assert(patched.dexSize == 152, "Pokédex size was not expanded to 152")
+assert(patched.dexSize == 292, "Pokédex size was not expanded to National Dex #292")
 assert(registered.WONDER_GUARD and registered.WONDER_GUARD.tossable == false,
   "Wonder Guard item was not registered as a persistent token")
 local shedinja = assert(registered.SHEDINJA, "Shedinja species was not registered")
-assert(shedinja.dex == 152 and shedinja.index == 152, "Shedinja dex/index mismatch")
+assert(shedinja.dex == 292 and shedinja.index == 152,
+  "Shedinja must retain internal slot 152 while displaying National Dex #292")
 assert(shedinja.types[1] == "BUG" and shedinja.types[2] == "GHOST", "Shedinja must be Bug/Ghost")
+local dexText = assert(registered.GEN1_SHEDINJA_DEX, "Shedinja Dex text was not registered")
+local expectedDexLines = {
+  "HOLLOW BUG SHELL.", "LEGEND SAYS IT", "STEALS THE SPIRIT", "OF THOSE WHO PEEK",
+}
+local lineCount = 0
+for line in (dexText .. "\n"):gmatch("(.-)\n") do
+  lineCount = lineCount + 1
+  assert(#line <= 18, "Shedinja Dex text exceeds the 18-column entry width")
+end
+assert(lineCount == 4, "Shedinja Dex text must stay on one four-line page")
+assert(dexText == table.concat(expectedDexLines, "\n"),
+  "Shedinja Dex text must use its approved explicit line breaks")
 assert(shedinja.baseStats.hp == 1, "Shedinja must retain base HP 1")
 assert(shedinja.trueColor == true, "Shedinja sprite art must opt out of 4-shade recoloring")
 local unusedCry = assert(registered.SHEDINJA_UNUSED_CRY_43,
