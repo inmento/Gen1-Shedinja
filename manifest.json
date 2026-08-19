@@ -1,7 +1,7 @@
 {
   "id": "shedninja",
   "name": "Shedinja",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "github": "inmento/Gen1-Shedinja",
   "api": 2,
   "entry": "main.lua",
@@ -17,8 +17,8 @@
   "optional_dependencies": [
     {
       "id": "shedinja_expanded_bridge",
-      "range": ">=0.1.1 <1.0.0",
-      "games": ["gen2"],
+      "range": ">=0.1.3 <1.0.0",
+      "games": ["gen1", "gen2"],
       "github": "inmento/Shedinja-Expanded-Bridge"
     },
     {
@@ -33,5 +33,5 @@
     "Kanto-Reforged"
   ],
   "affects_link": true,
-  "description": "Standalone Shedinja expansion for Red/Blue/Yellow and Gold: National Dex #292, generation-specific Wonder Guard, wild encounters, credited Gen 1/animated Gen 2 art, plus optional Gold Expanded Species and Gen 1 Crystal 251 compatibility paths."
+  "description": "Standalone Shedinja expansion for Red/Blue/Yellow and Gold: National Dex #292, generation-specific Wonder Guard, wild encounters, credited Gen 1/animated Gen 2 art, plus one optional compatibility bridge for Gold Expanded Species or Gen 1 Crystal 251."
 }

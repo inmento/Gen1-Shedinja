@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1 — Unified compatibility bridge
+
+Shedinja now declares one optional **Shedinja Compatibility Bridge** relationship for both generations. In Gold, that bridge activates only when Expanded Species is present and preserves Shedinja’s framework-aware #292 identity. In Red, Blue, or Yellow, it activates only when Crystal 251 is present and supplies the Crystal-safe index, split-stat, and genderless integration.
+
+This replaces the separate Crystal 251-specific companion. Core Shedinja remains standalone: the bridge is optional, its two external frameworks are optional, and no hard circular dependency is introduced.
+
 ## 0.2.0 — Shedinja package identity and index repair
 
 The mod package and manifest ID are now **`shedninja`**, and the release archive is named `shedninja-0.2.0.zip`. This replaces the legacy `gen1_shedinja` package identity so the manifest, installed folder, internal module paths, bridge requirements, and personal-index entry all use one consistent name.

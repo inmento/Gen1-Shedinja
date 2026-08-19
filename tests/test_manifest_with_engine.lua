@@ -6,7 +6,7 @@ local ModTargets = require("src.mods.ModTargets")
 local raw = {
   id = "shedninja",
   name = "Shedinja",
-  version = "0.2.0",
+  version = "0.2.1",
   github = "inmento/Gen1-Shedinja",
   api = 2,
   entry = "main.lua",
@@ -17,8 +17,8 @@ local raw = {
   optional_dependencies = {
     {
       id = "shedinja_expanded_bridge",
-      range = ">=0.1.1 <1.0.0",
-      games = { "gen2" },
+      range = ">=0.1.3 <1.0.0",
+      games = { "gen1", "gen2" },
       github = "inmento/Shedinja-Expanded-Bridge",
     },
     {
@@ -35,7 +35,7 @@ local raw = {
 }
 local manifest = Manifest.validate(raw, root)
 assert(manifest.id == "shedninja")
-assert(manifest.version == "0.2.0", "manifest must retain the Shedinja package-identity migration version")
+assert(manifest.version == "0.2.1", "manifest must carry the unified bridge relationship update")
 assert(manifest.github == "inmento/Gen1-Shedinja",
   "manifest must declare the repository used by launcher updates")
 assert(manifest.gen2compat == true,
@@ -51,8 +51,8 @@ for _, spec in ipairs(manifest.optionalSpecs) do
 end
 assert(goldBridge and goldBridge.github == "inmento/Shedinja-Expanded-Bridge"
   and ModTargets.specApplies(goldBridge, "gold", 2)
-  and not ModTargets.specApplies(goldBridge, "red", 1),
-  "Expanded Species bridge relationship must remain Gold-scoped and repository-hinted")
+  and ModTargets.specApplies(goldBridge, "red", 1),
+  "Unified bridge relationship must apply in both Gen 1 and Gold")
 assert(crystal and crystal.github == "Deftones565/gen1recomp-mod-crystal-251"
   and ModTargets.specApplies(crystal, "red", 1)
   and not ModTargets.specApplies(crystal, "gold", 2),
