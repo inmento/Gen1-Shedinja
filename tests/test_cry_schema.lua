@@ -1,5 +1,5 @@
 local root = assert(arg[1], "project root is required")
-local engineRoot = "/home/ubuntu/reference_gen1recomp023_source"
+local engineRoot = arg[2] or "/home/ubuntu/reference_gen1recomp0210_source"
 package.path = engineRoot .. "/?.lua;" .. engineRoot .. "/?/init.lua;" .. package.path
 
 local Schemas = require("src.mods.Schemas")

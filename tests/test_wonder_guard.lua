@@ -2,18 +2,22 @@ local root = arg[1] or "."
 package.path = root .. "/?.lua;" .. package.path
 
 local WonderGuard = require("wonder_guard")
-local wrapper
+local wrappers = {}
 local mod = {
   hooks = {
-    wrap = function(_, name, callback)
-      assert(name == "battle.damage", "Wonder Guard must wrap battle.damage")
-      wrapper = callback
+    wrap = function(_, name, callback, priority)
+      wrappers[name] = { callback = callback, priority = priority }
     end,
   },
 }
 
 WonderGuard.install(mod, "SHEDINJA", "WONDER_GUARD")
-assert(type(wrapper) == "function", "damage wrapper was not installed")
+local wrapper = assert(wrappers["battle.damage"] and wrappers["battle.damage"].callback,
+  "damage wrapper was not installed")
+local accuracy = assert(wrappers["battle.accuracy"] and wrappers["battle.accuracy"].callback,
+  "fixed-damage accuracy wrapper was not installed")
+assert(wrappers["battle.damage"].priority == 100 and wrappers["battle.accuracy"].priority == 101,
+  "Wonder Guard hook priorities drifted")
 
 local function case(label, opts)
   local playerMon = { species = opts.playerSpecies or "SHEDINJA" }
@@ -53,8 +57,11 @@ case("missing token does not guard", {
 case("another player species does not guard", {
   inventory = { WONDER_GUARD = 1 }, playerSpecies = "PIKACHU", typeMult = 10, expected = 22,
 })
-case("enemy Shedinja is never guarded by player token", {
-  inventory = { WONDER_GUARD = 1 }, enemySpecies = "SHEDINJA", target = "enemy", typeMult = 10, expected = 22,
+case("enemy Shedinja is guarded while the Gen 1 key item is present", {
+  inventory = { WONDER_GUARD = 1 }, enemySpecies = "SHEDINJA", target = "enemy", typeMult = 10, expected = 0,
+})
+case("enemy Shedinja is not guarded without the Gen 1 key item", {
+  inventory = {}, enemySpecies = "SHEDINJA", target = "enemy", typeMult = 10, expected = 22,
 })
 case("typeless confusion-like damage is not guarded", {
   inventory = { WONDER_GUARD = 1 }, typeless = true, typeMult = 10, expected = 22,
@@ -62,5 +69,40 @@ case("typeless confusion-like damage is not guarded", {
 case("already zero damage remains zero", {
   inventory = { WONDER_GUARD = 1 }, damage = 0, typeMult = 10, expected = 0,
 })
+
+local fixedTarget = { mon = { species = "SHEDINJA" }, curTypes = { "BUG", "GHOST" } }
+local fixedBattle = {
+  player = fixedTarget,
+  game = { save = { inventory = { WONDER_GUARD = 1 } } },
+  data = { type_chart = { matchups = {
+    { attacker = "FIRE", defender = "BUG", multiplier = 20 },
+    { attacker = "GHOST", defender = "GHOST", multiplier = 20 },
+    { attacker = "NORMAL", defender = "GHOST", multiplier = 0 },
+    { attacker = "FIGHTING", defender = "GHOST", multiplier = 0 },
+  } } },
+}
+local accuracyCalls = 0
+local function nativeAccuracy()
+  accuracyCalls = accuracyCalls + 1
+  return true
+end
+assert(accuracy(nativeAccuracy, {
+  battle = fixedBattle, target = fixedTarget,
+  move = { id = "SONIC_BOOM", type = "NORMAL", effect = "SPECIAL_DAMAGE_EFFECT" },
+}) == false, "neutral fixed damage must be blocked before applyDamage")
+assert(accuracyCalls == 1, "fixed-damage protection must preserve the native accuracy roll")
+assert(accuracy(nativeAccuracy, {
+  battle = fixedBattle, target = fixedTarget,
+  move = { id = "NIGHT_SHADE", type = "GHOST", effect = "SPECIAL_DAMAGE_EFFECT" },
+}) == true, "super-effective fixed damage must remain allowed")
+assert(accuracy(nativeAccuracy, {
+  battle = fixedBattle, target = fixedTarget,
+  move = { id = "SUPER_FANG", type = "NORMAL", effect = "SUPER_FANG_EFFECT" },
+}) == false, "Super Fang must be blocked when its type is not super-effective")
+fixedBattle.game.save.inventory.WONDER_GUARD = nil
+assert(accuracy(nativeAccuracy, {
+  battle = fixedBattle, target = fixedTarget,
+  move = { id = "SONIC_BOOM", type = "NORMAL", effect = "SPECIAL_DAMAGE_EFFECT" },
+}) == true, "fixed damage must remain allowed without the Wonder Guard token")
 
 print("wonder guard tests passed")

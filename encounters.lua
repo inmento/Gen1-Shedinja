@@ -24,10 +24,11 @@ local function chooseLevel(rng, placement)
   return rng(low, high)
 end
 
-local function installPlacements(mod, speciesId, placements)
+local function installPlacements(mod, speciesId, placements, enabled)
   mod.hooks:wrap("encounter.species", function(next, encounter, ctx)
     encounter = next(encounter, ctx)
     if type(encounter) ~= "table" or type(ctx) ~= "table" then return encounter end
+    if enabled and not enabled(ctx) then return encounter end
 
     local placement = placements[ctx.mapId]
     if not placement or placement.terrain ~= ctx.terrain then return encounter end
@@ -57,8 +58,8 @@ local GOLD_PLACEMENTS = {
   VICTORY_ROAD = { terrain = "grass", chance = 10, minLevel = 36, maxLevel = 38 },
 }
 
-function Encounters.installGold(mod, speciesId)
-  installPlacements(mod, speciesId, GOLD_PLACEMENTS)
+function Encounters.installGold(mod, speciesId, enabled)
+  installPlacements(mod, speciesId, GOLD_PLACEMENTS, enabled)
 end
 
 return Encounters

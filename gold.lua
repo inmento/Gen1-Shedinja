@@ -107,6 +107,93 @@ local function normalizeSaveShedinjaHp(save, speciesId)
   return changed
 end
 
+local ELM_REWARD_KEY = "gold_elm_shedinja_reward_claimed"
+
+local function ownsWonderGuardShedinja(save, speciesId, itemId)
+  if type(save) ~= "table" then return false end
+  local function inspect(list)
+    for _, mon in ipairs(type(list) == "table" and list or {}) do
+      if mon.species == speciesId and mon.item == itemId then return true end
+    end
+    return false
+  end
+  if inspect(save.party) then return true end
+  for _, box in pairs(save.boxes or {}) do
+    if inspect(box) then return true end
+  end
+  return false
+end
+
+local function itemIndex(game, itemId)
+  local items = game and game.data and game.data.items or {}
+  local direct = items[itemId]
+  if type(direct) == "table" and type(direct.index) == "number" then return direct.index end
+  for id, record in pairs(items) do
+    if id == itemId or (type(record) == "table" and record.id == itemId) then
+      return type(record) == "table" and record.index or nil
+    end
+  end
+  return nil
+end
+
+local function giveElmShedinja(game, speciesId, itemId)
+  local save = game and game.save
+  local data = game and game.data
+  if not (save and data) then return nil, "The gift could not be prepared." end
+
+  local Mon = require("src.battle.gen2.Mon")
+  local Party = require("src.pokemon.Party")
+  local Boxes = require("src.pokemon.Boxes")
+  local mon = Mon.new(data, speciesId, 5, { item = itemId })
+  if not mon then return nil, "The rift closed before the POKéMON could arrive." end
+  Mon.stampOT(save, mon)
+  save.party = save.party or {}
+  local addedToParty = Party.add(save.party, mon)
+  local boxNum
+  if not addedToParty then
+    boxNum = Boxes.deposit(save, mon)
+    if not boxNum then return nil, "Please make room for the\nPOKéMON first." end
+  end
+
+  save.pokedex = save.pokedex or { seen = {}, caught = {} }
+  save.pokedex.seen = save.pokedex.seen or {}
+  save.pokedex.caught = save.pokedex.caught or {}
+  save.pokedex.seen[speciesId] = true
+  save.pokedex.caught[speciesId] = true
+  normalizeShedinjaHp(mon, speciesId)
+  return mon, boxNum
+end
+
+local function queueElmReward(mod, game, speciesId, itemId)
+  if not (game and game.stack) then return false end
+  local TextBox = require("src.render.TextBox")
+  local claimed = mod.save and mod.save:get(ELM_REWARD_KEY)
+  if claimed then return false end
+
+  local lines = {
+    "While PROF. ELM dealt\nwith the robbery,\na rift opened.",
+    "A strange POKéMON\ncame through. ELM\nwants you to have it.",
+  }
+  local function show(index)
+    if lines[index] then
+      game.stack:push(TextBox.new(game, lines[index], function() show(index + 1) end))
+      return
+    end
+    local mon, boxNumOrError = giveElmShedinja(game, speciesId, itemId)
+    if not mon then
+      game.stack:push(TextBox.new(game, boxNumOrError, function() end))
+      return
+    end
+    if mod.save then mod.save:set(ELM_REWARD_KEY, true) end
+    local destination = boxNumOrError and ("SHEDINJA was sent\nto BOX " .. tostring(boxNumOrError) .. "!")
+      or "You received\nSHEDINJA!"
+    game.stack:push(TextBox.new(game,
+      destination .. "\nIt is holding WONDER\nGUARD.", function() end))
+  end
+  show(1)
+  return true
+end
+
 function Gold.install(mod, speciesId, itemId)
   -- Gold contains the four original Gen 2 experience curves only. Shedinja's
   -- Gen III Erratic curve is supplied as a small local registry record rather
@@ -214,7 +301,9 @@ function Gold.install(mod, speciesId, itemId)
   end, 50)
 
   require("mods.shedninja.wonder_guard").installGold(mod, speciesId, itemId)
-  require("mods.shedninja.encounters").installGold(mod, speciesId)
+  require("mods.shedninja.encounters").installGold(mod, speciesId, function()
+    return ownsWonderGuardShedinja(mod.game and mod.game.save, speciesId, itemId)
+  end)
 
   local function normalizeEvent(ev)
     local game = ev and (ev.game or (ev.ctx and ev.ctx.game)) or mod.game
@@ -222,9 +311,10 @@ function Gold.install(mod, speciesId, itemId)
     normalizeSaveShedinjaHp(game and game.save, speciesId)
   end
 
+  local pendingElmReward
+
   mod.events:on("game.ready", function(ev)
     local game = ev and ev.game
-    giveWonderGuard(game and game.save, itemId)
     normalizeSaveShedinjaHp(game and game.save, speciesId)
     injectDexEntry(game, speciesId)
   end)
@@ -239,12 +329,57 @@ function Gold.install(mod, speciesId, itemId)
     mod.events:on(eventName, normalizeEvent)
   end
 
+  -- `Mon.new` applies the ordinary Gold stat formula before Battle exposes an
+  -- enemy. Repair the live opponent after construction and again on a trainer
+  -- send-out. The Gold battle object stores mons directly, while the shared
+  -- event shape may carry a battler wrapper on other generations.
+  local function normalizeEnemyBattler(event)
+    local battle = event and event.battle
+    local mon = event and event.battler or (battle and battle.enemy)
+    mon = mon and (mon.mon or mon)
+    if battle and mon and mon == battle.enemy then
+      normalizeShedinjaHp(mon, speciesId)
+    end
+  end
+
+  mod.events:on("battle.started", normalizeEnemyBattler)
+  mod.events:on("battle.battler_switched", normalizeEnemyBattler)
+
+  -- Preserve Elm's native five Poké Balls. Once that exact post-Mystery-Egg
+  -- command succeeds, wait for its script to complete before presenting the
+  -- rift scene and gifting the held-item Shedinja. This deliberately avoids
+  -- replacing the native story script or triggering from an unrelated ball.
+  mod.hooks:wrap("script.command", function(next, ctx, name, args, cmd)
+    local result = next(ctx, name, args, cmd)
+    local game = mod.game
+    local save = game and game.save
+    local flags = save and save.flags
+    local item = cmd and cmd.item
+    local quantity = cmd and (cmd.quantity or (cmd.args and cmd.args[2])) or nil
+    local pokeBallIndex = itemIndex(game, "POKE_BALL")
+    local isNativeBallReward = (name == "giveitem" or name == "verbosegiveitem")
+      and ctx and ctx.generation == 2 and ctx.mapId == "ELMS_LAB"
+      and flags and flags.EVENT_GAVE_MYSTERY_EGG_TO_ELM == true
+      and pokeBallIndex ~= nil and tonumber(item) == tonumber(pokeBallIndex)
+      and tonumber(quantity or 1) == 5
+      and ctx.vm and ctx.vm.scriptVar == 1
+    if isNativeBallReward and not (mod.save and mod.save:get(ELM_REWARD_KEY)) then
+      pendingElmReward = ctx
+    end
+    return result
+  end, 75)
+
+  mod.events:on("script.ended", function(ev)
+    local ctx = ev and ev.ctx
+    if pendingElmReward and ctx == pendingElmReward then
+      pendingElmReward = nil
+      if ev.completed then queueElmReward(mod, mod.game, speciesId, itemId) end
+    end
+  end)
+
   return {
     SHEDINJA = speciesId,
     WONDER_GUARD = itemId,
-    grantWonderGuard = function(game)
-      giveWonderGuard(game and game.save, itemId)
-    end,
     injectDexEntry = function(game)
       injectDexEntry(game, speciesId)
     end,

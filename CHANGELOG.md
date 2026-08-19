@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.2.2 — Cross-side Wonder Guard and Gold rift progression
+
+This update makes Wonder Guard a complete **Shedinja battle rule** rather than a player-only effect, while keeping the item system as the activation mechanism appropriate to each generation.
+
+### Red, Blue, and Yellow
+
+`WONDER_GUARD` remains the mod’s persistent Gen 1 Bag token. While that key item is present, **every active Shedinja** receives Wonder Guard: the player’s active Shedinja, wild Shedinja, and trainer-owned Shedinja. The rule still applies only to Shedinja in battle; it does not affect another species, a benched Pokémon, or typeless self-damage such as confusion. Removing or not carrying the token leaves all sides without the protection, so the item remains the single clear Gen 1 switch.
+
+The fixed-damage coverage introduced during the reliability pass now uses this same cross-side rule. SonicBoom, Dragon Rage, Seismic Toss, Night Shade, Psywave, and Super Fang are blocked before HP loss when their type is not super-effective against a protected Shedinja. A genuinely super-effective typed fixed-damage move remains allowed.
+
+### Gold
+
+Gold no longer places `WONDER_GUARD` in the Bag automatically at startup. After the player returns the Mystery Egg to Professor Elm, Elm’s assistant still gives the native five Poké Balls first. Once that normal reward succeeds, a short new scene explains that a rift opened while Elm was dealing with the robbery. The assistant then gives the player a level-5 **Shedinja already holding WONDER GUARD**. The gift uses the normal party-first and PC-box fallback path, receives its mandatory 1 HP normalization, and is recorded only after delivery succeeds so it cannot duplicate on reload.
+
+Gold’s Route 29, Route 34, and Victory Road Shedinja replacements are now conditional. They activate only while **any Shedinja in the player’s party or PC boxes is holding `WONDER_GUARD`**. A Shedinja without the item does not activate route encounters; neither does a different species holding it. Moving the item away from every owned Shedinja immediately returns those routes to their native encounter tables, without removing any Shedinja already caught. This gives the item a meaningful progression role and ensures the player receives a legitimate first Shedinja rather than relying on an unconditional early wild roll.
+
+Enemy Shedinja in Gold now receives the ordinary-damage Wonder Guard rule intrinsically and does not need a fake held item. The player’s active Shedinja still requires the actual held item. Gold’s normal-accuracy fixed-damage paths share the same protection gate; the engine’s sure-hit fixed-damage branch remains the only known limitation until Gen1Recomp exposes a pre-application fixed-damage hook.
+
+All new behavior was regression-tested with the Shedinja core suite, Gen 1/Gold battle coverage, conditional Gold encounter coverage, Elm reward flow, Crystal 251 compatibility, every unified bridge mode, v0.2.10 manifest validation, and Lua syntax checks.
+
 ## 0.2.1 — Unified compatibility bridge
 
 Shedinja now declares one optional **Shedinja Compatibility Bridge** relationship for both generations. In Gold, that bridge activates only when Expanded Species is present and preserves Shedinja’s framework-aware #292 identity. In Red, Blue, or Yellow, it activates only when Crystal 251 is present and supplies the Crystal-safe index, split-stat, and genderless integration.
