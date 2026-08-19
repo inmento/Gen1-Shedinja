@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.11 — Launcher update metadata repair
+
+This small release restores one missing manifest field: the core mod now declares its own public GitHub repository. Gen1Recomp’s **Update** and **Versions** flow reads the installed mod manifest to locate release updates; the personal index already knew the repository, but the installed Shedinja manifest did not. This correction allows launcher-driven updates from the index without changing gameplay, sprites, encounters, Wonder Guard, or the Expanded Species bridge behavior.
+
 ## 0.1.10 — Current-API bridge relationship
 
 After validation against Gen1Recomp **0.2.10**, core Shedinja now declares the public Shedinja Expanded Bridge as a **Gold-only optional dependency** with a direct GitHub source. Shedinja remains independently installable and fully functional in Red, Blue, Yellow, and standalone Gold. When the bridge is installed and active in Gold, the loader orders it after core Shedinja without creating a circular hard-dependency block.

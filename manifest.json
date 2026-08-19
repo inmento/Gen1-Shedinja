@@ -1,7 +1,8 @@
 {
   "id": "gen1_shedinja",
   "name": "Shedinja",
-  "version": "0.1.10",
+  "version": "0.1.11",
+  "github": "inmento/Gen1-Shedinja",
   "api": 2,
   "entry": "main.lua",
   "profile": "overhaul",

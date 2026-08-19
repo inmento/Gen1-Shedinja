@@ -6,7 +6,8 @@ local ModTargets = require("src.mods.ModTargets")
 local raw = {
   id = "gen1_shedinja",
   name = "Shedinja",
-  version = "0.1.10",
+  version = "0.1.11",
+  github = "inmento/Gen1-Shedinja",
   api = 2,
   entry = "main.lua",
   profile = "overhaul",
@@ -28,6 +29,9 @@ local raw = {
 }
 local manifest = Manifest.validate(raw, root)
 assert(manifest.id == "gen1_shedinja")
+assert(manifest.version == "0.1.11", "manifest must retain the update-fix version")
+assert(manifest.github == "inmento/Gen1-Shedinja",
+  "manifest must declare the repository used by launcher updates")
 assert(manifest.gen2compat == true,
   "manifest must declare Gold compatibility")
 assert(#manifest.conflicts == 2, "known expansion conflicts were not retained")
