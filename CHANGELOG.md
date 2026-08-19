@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0 — Shedinja package identity and index repair
+
+The mod package and manifest ID are now **`shedninja`**, and the release archive is named `shedninja-0.2.0.zip`. This replaces the legacy `gen1_shedinja` package identity so the manifest, installed folder, internal module paths, bridge requirements, and personal-index entry all use one consistent name.
+
+The personal index now points at this current release asset instead of an outdated listing. Because Gen1Recomp treats a changed manifest ID as a distinct installed mod, remove the retired `gen1_shedinja` copy and install this `shedninja` package once; future updates will use the corrected repository metadata and package identity.
+
 ## 0.1.12 — Crystal 251 coexistence
 
 Core Shedinja is no longer blocked when **Crystal 251** is active in Red, Blue, or Yellow. It recognizes Crystal 251 as a Gen 1-only optional ordering source and selects internal species index **252** instead of the standalone index 152 that Crystal uses for Chikorita. Shedinja remains National Dex **#292**.

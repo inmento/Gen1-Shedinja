@@ -15,13 +15,13 @@ end
 package.preload["src.core.GameVersion"] = function()
   return { get = function() return "gold" end }
 end
-package.preload["mods.gen1_shedinja.gold"] = function()
+package.preload["mods.shedninja.gold"] = function()
   return assert(dofile(root .. "/gold.lua"))
 end
-package.preload["mods.gen1_shedinja.wonder_guard"] = function()
+package.preload["mods.shedninja.wonder_guard"] = function()
   return assert(dofile(root .. "/wonder_guard.lua"))
 end
-package.preload["mods.gen1_shedinja.encounters"] = function()
+package.preload["mods.shedninja.encounters"] = function()
   return assert(dofile(root .. "/encounters.lua"))
 end
 

@@ -11,10 +11,10 @@ end
 package.preload["src.core.GameVersion"] = function()
   return { get = function() return "yellow" end }
 end
-package.preload["mods.gen1_shedinja.wonder_guard"] = function()
+package.preload["mods.shedninja.wonder_guard"] = function()
   return { install = function() end }
 end
-package.preload["mods.gen1_shedinja.encounters"] = function()
+package.preload["mods.shedninja.encounters"] = function()
   return { install = function() end }
 end
 

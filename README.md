@@ -1,8 +1,8 @@
 # Shedinja for Gen1Recomp
 
-**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, base HP 1, generation-appropriate wild encounters, and a deliberately scoped Wonder Guard implementation. Version **0.1.12** also provides optional bridge paths for Crystal 251 in R/B/Y and Expanded Species in Gold, while preserving standalone behavior in every supported game.
+**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, base HP 1, generation-appropriate wild encounters, and a deliberately scoped Wonder Guard implementation. Version **0.2.0** uses the consistent package ID **`shedninja`** and provides optional bridge paths for Crystal 251 in R/B/Y and Expanded Species in Gold, while preserving standalone behavior in every supported game.
 
-## Version 0.1.12 at a glance
+## Version 0.2.0 at a glance
 
 | Game | Internal species slot | National Dex number | Battle art | Wonder Guard model |
 |---|---:|---:|---|---|
@@ -38,11 +38,15 @@ Gold’s front sprite plays the three supplied Crystal animation frames once whe
 
 Gold also inserts a Shedinja entry into its `gen2Pokedex` data at game-ready time, allowing National Dex #292, height, weight, and a correctly fitted two-page entry to appear without replacing a native species entry.
 
+## Installation and package migration
+
+Install the current `shedninja-0.2.0.zip` release through your index or from GitHub Releases. The retired releases used the manifest ID `gen1_shedinja`; because Gen1Recomp treats the renamed `shedninja` package as a distinct mod, remove the old `gen1_shedinja` install and then install `shedninja` once. Future releases will update normally through the launcher.
+
 ## Compatibility
 
 This mod is designed to coexist with the user’s non-roster gameplay mods, including Starter Picker, Item Randomizer, Gym Leader Shuffle, Randomized Gym Challenge, and Sound Effect Replacer. It is standalone: none of those mods is required for Shedinja to load, appear, receive Wonder Guard, or display its Dex content.
 
-> **Roster-expansion guidance:** Crystal 251 is supported in Red, Blue, and Yellow with core Shedinja 0.1.12+ and the separate [Shedinja Crystal 251 Bridge](https://github.com/inmento/Shedinja-Crystal-251-Bridge/releases). The bridge moves Shedinja to internal index `252`, retains National Dex #292, and supplies Crystal-specific split-stat metadata. In Gold, use the separate [Shedinja Expanded Bridge](https://github.com/inmento/Shedinja-Expanded-Bridge/releases) only with Expanded Species. **Kanto Reforged** and unrelated roster/Dex/index-overhaul mods remain unsupported unless they provide their own dedicated compatibility bridge.
+> **Roster-expansion guidance:** Crystal 251 is supported in Red, Blue, and Yellow with core Shedinja 0.2.0+ and the separate [Shedinja Crystal 251 Bridge](https://github.com/inmento/Shedinja-Crystal-251-Bridge/releases). The bridge moves Shedinja to internal index `252`, retains National Dex #292, and supplies Crystal-specific split-stat metadata. In Gold, use the separate [Shedinja Expanded Bridge](https://github.com/inmento/Shedinja-Expanded-Bridge/releases) only with Expanded Species. **Kanto Reforged** and unrelated roster/Dex/index-overhaul mods remain unsupported unless they provide their own dedicated compatibility bridge.
 
 Gym Leader Shuffle and Randomized Gym Challenge remain mutually exclusive with each other because they edit the same gym content, but either may be used with Shedinja when enabled alone.
 
@@ -60,4 +64,4 @@ See [CREDITS.md](CREDITS.md) for the complete source links, attribution details,
 
 ## Scope and status
 
-This is a public **0.1.12** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, and battle-behavior results before further species or progression mechanics are added.
+This is a public **0.2.0** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, and battle-behavior results before further species or progression mechanics are added.

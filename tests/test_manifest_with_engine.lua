@@ -4,9 +4,9 @@ package.path = "/home/ubuntu/reference_gen1recomp0210_source/?.lua;/home/ubuntu/
 local Manifest = require("src.mods.Manifest")
 local ModTargets = require("src.mods.ModTargets")
 local raw = {
-  id = "gen1_shedinja",
+  id = "shedninja",
   name = "Shedinja",
-  version = "0.1.12",
+  version = "0.2.0",
   github = "inmento/Gen1-Shedinja",
   api = 2,
   entry = "main.lua",
@@ -34,8 +34,8 @@ local raw = {
   description = "Standalone Shedinja expansion for Red/Blue/Yellow and Gold.",
 }
 local manifest = Manifest.validate(raw, root)
-assert(manifest.id == "gen1_shedinja")
-assert(manifest.version == "0.1.12", "manifest must retain the Crystal compatibility version")
+assert(manifest.id == "shedninja")
+assert(manifest.version == "0.2.0", "manifest must retain the Shedinja package-identity migration version")
 assert(manifest.github == "inmento/Gen1-Shedinja",
   "manifest must declare the repository used by launcher updates")
 assert(manifest.gen2compat == true,

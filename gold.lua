@@ -213,8 +213,8 @@ function Gold.install(mod, speciesId, itemId)
     return next(path, ctx)
   end, 50)
 
-  require("mods.gen1_shedinja.wonder_guard").installGold(mod, speciesId, itemId)
-  require("mods.gen1_shedinja.encounters").installGold(mod, speciesId)
+  require("mods.shedninja.wonder_guard").installGold(mod, speciesId, itemId)
+  require("mods.shedninja.encounters").installGold(mod, speciesId)
 
   local function normalizeEvent(ev)
     local game = ev and (ev.game or (ev.ctx and ev.ctx.game)) or mod.game
