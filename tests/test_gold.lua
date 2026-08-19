@@ -1,7 +1,8 @@
 local root = assert(arg[1], "project root is required")
 
-local registered, patched, ready = {}, {}, nil
-local wraps = {}
+local registered, patched = {}, {}
+local iconRegistered, iconOverrides = {}, {}
+local events, wraps = {}, {}
 local now = 0
 
 local function registry()
@@ -33,11 +34,15 @@ _G.mod = {
     items = registry(),
     palettes = registry(),
     pokemon = registry(),
+    icons = {
+      register = function(_, id, value) iconRegistered[id] = value end,
+      override = function(_, id, value) iconOverrides[id] = value end,
+    },
   },
   events = {
     on = function(_, name, callback)
-      assert(name == "game.ready")
-      ready = callback
+      assert(events[name] == nil, "duplicate Gold event registration: " .. name)
+      events[name] = callback
     end,
   },
   hooks = {
@@ -68,6 +73,17 @@ assert(shedinja.baseStats.hp == 1 and shedinja.baseStats.specialAttack == 30
 assert(shedinja.growthRate == "ERRATIC", "Gold Shedinja must use the Erratic growth curve")
 assert(shedinja.picSize == 6 and shedinja.trueColor == nil,
   "Gold art must use the 6-tile GBC palette-rendered sprite path")
+assert(shedinja.spriteFront == root .. "/assets/gen2/shedinja_front_1.png"
+  and shedinja.spriteBack == root .. "/assets/gen2/shedinja_back.png",
+  "Gold static screens must receive mounted Shedinja portrait paths")
+assert(iconRegistered.ICON_GEN1_SHEDINJA
+  and iconRegistered.ICON_GEN1_SHEDINJA.image == root .. "/assets/gen2/shedinja_icon.png"
+  and iconRegistered.ICON_GEN1_SHEDINJA.width == 16
+  and iconRegistered.ICON_GEN1_SHEDINJA.height == 32
+  and iconRegistered.ICON_GEN1_SHEDINJA.frames == 2,
+  "Gold Shedinja party icon sheet was not registered correctly")
+assert(iconOverrides.SHEDINJA == "ICON_GEN1_SHEDINJA",
+  "Gold Shedinja species was not associated with its party icon")
 assert(shedinja.eggSteps == 15 and shedinja.eggGroups[1] == "EGG_MINERAL"
   and shedinja.eggGroups[2] == "EGG_MINERAL", "Gold breeding data is incorrect")
 assert(#shedinja.levelMoves == 10 and shedinja.levelMoves[10].move == "GRUDGE",
@@ -83,11 +99,26 @@ assert(palettes.shiny[2][1] == 230 and palettes.shiny[2][2] == 173 and palettes.
 local item = assert(registered.WONDER_GUARD, "Gold Wonder Guard item was not registered")
 assert(item.tossable == true and item.needsTarget == false,
   "Gold Wonder Guard must be a non-usable normal bag item so it can be given")
-assert(type(ready) == "function", "Gold game.ready handler was not registered")
+local ready = assert(events["game.ready"], "Gold game.ready handler was not registered")
+assert(type(events["pokemon.caught"]) == "function", "Gold catch HP repair handler was not registered")
+assert(type(events["pokemon.received"]) == "function", "Gold receipt HP repair handler was not registered")
+assert(type(events["pokemon.level_up"]) == "function", "Gold level-up HP repair handler was not registered")
+assert(type(events["script.ended"]) == "function", "Gold script HP repair handler was not registered")
 
-local game = { save = { inventory = {} }, data = { gen2Pokedex = { entries = {} } } }
+local game = {
+  save = {
+    inventory = {},
+    party = { { species = "SHEDINJA", hp = 16, maxHp = 16, stats = { hp = 16 } } },
+    boxes = { { { species = "SHEDINJA", hp = 0, maxHp = 17, stats = { hp = 17 } } } },
+  },
+  data = { gen2Pokedex = { entries = {} } },
+}
 ready({ game = game })
 assert(game.save.inventory.WONDER_GUARD == 1, "Gold Wonder Guard was not granted")
+assert(game.save.party[1].hp == 1 and game.save.party[1].maxHp == 1
+  and game.save.party[1].stats.hp == 1, "Gold save repair must normalize a living Shedinja to 1 HP")
+assert(game.save.boxes[1][1].hp == 0 and game.save.boxes[1][1].maxHp == 1
+  and game.save.boxes[1][1].stats.hp == 1, "Gold save repair must preserve a fainted Shedinja at 0/1 HP")
 local entry = assert(game.data.gen2Pokedex.entries.SHEDINJA, "Gold Shedinja Dex entry was not inserted")
 assert(entry.dex == 292 and entry.height == 207 and entry.weight == 26,
   "Gold Shedinja Dex measurements or number are incorrect")
@@ -126,6 +157,23 @@ assert(sprite.callback(fallback, "base.png", { kind = "battle", species = "PIKAC
 assert(sprite.callback(fallback, "base.png", { kind = "battle", species = "SHEDINJA", side = "front" })
   == root .. "/assets/gen2/shedinja_front_3.png",
   "Gold animation fallback must remain safe when no battler record is available")
+
+local caught = { species = "SHEDINJA", hp = 17, maxHp = 17, stats = { hp = 17 } }
+events["pokemon.caught"]({ game = game, mon = caught })
+assert(caught.hp == 1 and caught.maxHp == 1 and caught.stats.hp == 1,
+  "Gold caught Shedinja must be normalized to 1 HP")
+local leveled = { species = "SHEDINJA", hp = 19, maxHp = 19, stats = { hp = 19 } }
+events["pokemon.level_up"]({ game = game, mon = leveled })
+assert(leveled.hp == 1 and leveled.maxHp == 1 and leveled.stats.hp == 1,
+  "Gold level-up Shedinja must remain at 1 HP")
+local scripted = { species = "SHEDINJA", hp = 16, maxHp = 16, stats = { hp = 16 } }
+game.save.party = { scripted }
+events["script.ended"]({ ctx = { game = game } })
+assert(scripted.hp == 1 and scripted.maxHp == 1 and scripted.stats.hp == 1,
+  "Gold scripted starter Shedinja must be normalized after its script completes")
+local other = { species = "PIKACHU", hp = 14, maxHp = 14, stats = { hp = 14 } }
+assert(installed.normalizeHp(other) == false and other.maxHp == 14,
+  "Gold HP normalizer must not alter other species")
 
 local encounter = assert(wraps["encounter.species"], "Gold encounter hook was not registered")
 assert(encounter.priority == 25, "Gold encounter hook priority drifted")

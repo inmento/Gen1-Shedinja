@@ -54,8 +54,10 @@ local function registerContent()
     catchRate = 45,
     growthRate = "MEDIUM_FAST",
     frontSize = 5,
-    spriteFront = "assets/sprites/shedinja_front.png",
-    spriteBack = "assets/sprites/shedinja_back.png",
+    -- Oak's starter Dex preview and the Gen 1 Dex menu resolve these paths
+    -- directly. Mounted absolute paths are required outside the battle hook.
+    spriteFront = mod.path .. "/assets/sprites/shedinja_front.png",
+    spriteBack = mod.path .. "/assets/sprites/shedinja_back.png",
     trueColor = true,
     cry = SHEDINJA_UNUSED_CRY_43,
     level1Moves = { "SCRATCH", "HARDEN", "LEECH_LIFE" },
@@ -70,7 +72,7 @@ local function registerContent()
     },
     evolutions = {},
     dexEntry = {
-      kind = "SHED",
+      kind = "BUG/GHOST",
       heightFt = 2,
       heightIn = 7,
       weight = 26,

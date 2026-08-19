@@ -24,6 +24,7 @@ package.preload["mods.gen1_shedinja.encounters"] = function()
 end
 
 _G.mod = {
+  path = root,
   content = {
     constants = registry(),
     items = registry(),
@@ -50,6 +51,11 @@ local shedinja = assert(registered.SHEDINJA, "Shedinja species was not registere
 assert(shedinja.dex == 292 and shedinja.index == 152,
   "Shedinja must retain internal slot 152 while displaying National Dex #292")
 assert(shedinja.types[1] == "BUG" and shedinja.types[2] == "GHOST", "Shedinja must be Bug/Ghost")
+assert(shedinja.spriteFront == root .. "/assets/sprites/shedinja_front.png"
+  and shedinja.spriteBack == root .. "/assets/sprites/shedinja_back.png",
+  "Gen 1 Oak and Dex screens must receive mounted Shedinja portrait paths")
+assert(shedinja.dexEntry.kind == "BUG/GHOST",
+  "Gen 1 Shedinja Dex category must display BUG/GHOST rather than SHED")
 local dexText = assert(registered.GEN1_SHEDINJA_DEX, "Shedinja Dex text was not registered")
 local expectedDexLines = {
   "HOLLOW BUG SHELL.", "LEGEND SAYS IT", "STEALS THE SPIRIT", "OF THOSE WHO PEEK",

@@ -1,7 +1,7 @@
 {
   "id": "gen1_shedinja",
   "name": "Shedinja",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "api": 2,
   "entry": "main.lua",
   "profile": "overhaul",
@@ -19,5 +19,5 @@
     "Kanto-Reforged"
   ],
   "affects_link": true,
-  "description": "Standalone Shedinja expansion for Red/Blue/Yellow and Gold: National Dex #292, generation-specific Wonder Guard, wild encounters, and credited Gen 1 or animated Gen 2 battle art. Incompatible with other Pokédex or species expansion mods."
+  "description": "Standalone Shedinja expansion for Red/Blue/Yellow and Gold: National Dex #292, generation-specific Wonder Guard, wild encounters, credited Gen 1/animated Gen 2 art, and an optional Gold Expanded Species bridge."
 }

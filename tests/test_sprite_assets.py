@@ -18,6 +18,7 @@ expected_gold = {
     'shedinja_front_2.png': (48, 48),
     'shedinja_front_3.png': (48, 48),
     'shedinja_back.png': (48, 48),
+    'shedinja_icon.png': (16, 32),
 }
 valid_shades = {0, 85, 170, 255}
 for name, size in expected_gold.items():

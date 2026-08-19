@@ -13,6 +13,8 @@ local FRONT_FRAMES = {
   "assets/gen2/shedinja_front_3.png",
 }
 local BACK_FRAME = "assets/gen2/shedinja_back.png"
+local ICON_FRAME = "assets/gen2/shedinja_icon.png"
+local ICON_ID = "ICON_GEN1_SHEDINJA"
 
 -- Crystal's `anim.asm` holds frames 1, 2, and 3 for 6, 32, and 10 sixty-Hz
 -- ticks. Gold re-resolves pokemon.sprite every draw, so a wall-clock path
@@ -79,6 +81,32 @@ local function injectDexEntry(game, speciesId)
   dex.entries[speciesId] = entry
 end
 
+-- Base HP 1 alone follows Gold's ordinary stat formula, which produces 15–16
+-- HP at level 5. Shedinja's defining rule is stricter: its maximum HP is one
+-- at every level. Preserve a fainted record at zero HP rather than reviving it
+-- while normalizing a save or a post-script gift.
+local function normalizeShedinjaHp(mon, speciesId)
+  if type(mon) ~= "table" or mon.species ~= speciesId then return false end
+  mon.stats = mon.stats or {}
+  mon.stats.hp = 1
+  mon.maxHp = 1
+  mon.hp = (tonumber(mon.hp) or 1) <= 0 and 0 or 1
+  return true
+end
+
+local function normalizeSaveShedinjaHp(save, speciesId)
+  if type(save) ~= "table" then return 0 end
+  local changed = 0
+  local function inspect(list)
+    for _, mon in ipairs(type(list) == "table" and list or {}) do
+      if normalizeShedinjaHp(mon, speciesId) then changed = changed + 1 end
+    end
+  end
+  inspect(save.party)
+  for _, box in pairs(save.boxes or {}) do inspect(box) end
+  return changed
+end
+
 function Gold.install(mod, speciesId, itemId)
   -- Gold contains the four original Gen 2 experience curves only. Shedinja's
   -- Gen III Erratic curve is supplied as a small local registry record rather
@@ -111,8 +139,12 @@ function Gold.install(mod, speciesId, itemId)
     baseExp = 95,
     growthRate = "ERRATIC",
     picSize = 6,
-    spriteFront = FRONT_FRAMES[1],
-    spriteBack = BACK_FRAME,
+    -- Static Gold screens (Elm's pokepic preview, Summary, and trades) load
+    -- these fields directly and do not invoke pokemon.sprite. Use mounted
+    -- absolute asset paths here; the battle hook below only replaces the front
+    -- path with time-indexed frames during battle.
+    spriteFront = mod.path .. "/" .. FRONT_FRAMES[1],
+    spriteBack = mod.path .. "/" .. BACK_FRAME,
     levelMoves = {
       { level = 1, move = "SCRATCH" },
       { level = 1, move = "HARDEN" },
@@ -130,6 +162,18 @@ function Gold.install(mod, speciesId, itemId)
     eggSteps = 15,
     genderRatio = 255,
   })
+
+  -- Gold's party list uses a dedicated 16x32 two-frame icon sheet rather
+  -- than a battle or summary sprite. Register the static Shedinja icon before
+  -- associating it with the species so party, PC, and selection menus do not
+  -- fall back to an empty slot.
+  mod.content.icons:register(ICON_ID, {
+    image = mod.path .. "/" .. ICON_FRAME,
+    width = 16,
+    height = 32,
+    frames = 2,
+  })
+  mod.content.icons:override(speciesId, ICON_ID)
 
   -- The PNG frames are four grayscale source shades. Gold's sprite renderer
   -- applies one of these registered palette rows at draw time, so shininess
@@ -172,11 +216,28 @@ function Gold.install(mod, speciesId, itemId)
   require("mods.gen1_shedinja.wonder_guard").installGold(mod, speciesId, itemId)
   require("mods.gen1_shedinja.encounters").installGold(mod, speciesId)
 
+  local function normalizeEvent(ev)
+    local game = ev and (ev.game or (ev.ctx and ev.ctx.game)) or mod.game
+    normalizeShedinjaHp(ev and (ev.mon or ev.pokemon), speciesId)
+    normalizeSaveShedinjaHp(game and game.save, speciesId)
+  end
+
   mod.events:on("game.ready", function(ev)
     local game = ev and ev.game
     giveWonderGuard(game and game.save, itemId)
+    normalizeSaveShedinjaHp(game and game.save, speciesId)
     injectDexEntry(game, speciesId)
   end)
+
+  -- Gold's ordinary monster constructor is intentionally shared by all
+  -- species, so it cannot encode Shedinja's special one-HP rule. These
+  -- post-construction boundaries cover wild catches, link/trade receipts,
+  -- level-up stat refreshes, and scripted gifts such as an Elm starter.
+  for _, eventName in ipairs({
+    "pokemon.caught", "pokemon.received", "pokemon.level_up", "script.ended",
+  }) do
+    mod.events:on(eventName, normalizeEvent)
+  end
 
   return {
     SHEDINJA = speciesId,
@@ -186,6 +247,12 @@ function Gold.install(mod, speciesId, itemId)
     end,
     injectDexEntry = function(game)
       injectDexEntry(game, speciesId)
+    end,
+    normalizeHp = function(mon)
+      return normalizeShedinjaHp(mon, speciesId)
+    end,
+    normalizeSaveHp = function(save)
+      return normalizeSaveShedinjaHp(save, speciesId)
     end,
   }
 end

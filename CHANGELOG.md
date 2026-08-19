@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.8 — Gold presentation and one-HP fixes; Gen 1 Oak preview repair
+
+Gold now supplies a native party-menu icon, mounted static portrait paths for Elm’s choice preview and the summary screen, and a lifecycle repair that enforces Shedinja’s defining **1 maximum HP** after catches, scripted gifts, transfers, level-up refreshes, and save loading. The battle animation remains unchanged.
+
+Gen 1 Oak and Pokédex preview screens now use mounted portrait paths, fixing the missing Shedinja image. Their category now displays **BUG/GHOST** rather than the incorrect `SHED` label. Starter Picker’s Gen 1 rival projection was also regression-tested with Shedinja: when neither remaining starter is super-effective against Bug/Ghost, it correctly selects one of the two remaining safe candidates without mutating the native rival party.
+
+For Expanded Species users, install the separate Gold-only **Shedinja Expanded Bridge**. Core Shedinja remains standalone; the bridge is the only component that requires both mods and preserves framework-aware virtual and visible #292 identity.
+
 ## 0.1.7 — Gold support, animated Crystal-style sprites, and held-item Wonder Guard
 
 Shedinja now supports **Pokémon Gold** while preserving the established Red/Blue/Yellow implementation unchanged. Gold uses a distinct Gen 2 species record at internal slot `252`, displays Shedinja as National Dex #292, uses Gen 2 split Special stats and the Erratic experience curve, and adds Route 29, Route 34, and Victory Road land encounters without replacing any native encounter table.
