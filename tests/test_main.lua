@@ -8,6 +8,14 @@ local function registry()
   }
 end
 
+local registeredIcons, iconOverrides = {}, {}
+local function iconRegistry()
+  return {
+    register = function(_, id, value) registeredIcons[id] = value end,
+    override = function(_, speciesId, iconId) iconOverrides[speciesId] = iconId end,
+  }
+end
+
 package.preload["src.core.GameVersion"] = function()
   return { get = function() return "red" end }
 end
@@ -30,6 +38,7 @@ _G.mod = {
     items = registry(),
     text = registry(),
     cries = registry(),
+    icons = iconRegistry(),
     pokemon = registry(),
   },
   events = {
@@ -56,6 +65,12 @@ assert(shedinja.spriteFront == root .. "/assets/sprites/shedinja_front.png"
   "Gen 1 Oak and Dex screens must receive mounted Shedinja portrait paths")
 assert(shedinja.dexEntry.kind == "BUG/GHOST",
   "Gen 1 Shedinja Dex category must display BUG/GHOST rather than SHED")
+local icon = assert(registeredIcons.ICON_GEN1_SHEDINJA,
+  "Gen 1 Shedinja party icon was not registered")
+assert(icon.image == root .. "/assets/sprites/shedinja_icon.png" and icon.frames == 2,
+  "Gen 1 Shedinja party icon must use the mounted two-frame icon sheet")
+assert(iconOverrides.SHEDINJA == "ICON_GEN1_SHEDINJA",
+  "Gen 1 Shedinja must map its species ID to the registered party icon")
 local dexText = assert(registered.GEN1_SHEDINJA_DEX, "Shedinja Dex text was not registered")
 local expectedDexLines = {
   "HOLLOW BUG SHELL.", "LEGEND SAYS IT", "STEALS THE SPIRIT", "OF THOSE WHO PEEK",

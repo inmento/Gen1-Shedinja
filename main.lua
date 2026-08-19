@@ -37,6 +37,15 @@ local function registerContent()
     length = 16,
   })
 
+  -- Party/PC menus use a dedicated two-frame 16x32 icon sheet; they do not
+  -- use spriteFront. Register a Gen 1-derived per-species icon explicitly.
+  local iconId = "ICON_GEN1_SHEDINJA"
+  mod.content.icons:register(iconId, {
+    image = mod.path .. "/assets/sprites/shedinja_icon.png",
+    frames = 2,
+  })
+  mod.content.icons:override(SHEDINJA, iconId)
+
   mod.content.pokemon:register(SHEDINJA, {
     id = SHEDINJA,
     index = 152,

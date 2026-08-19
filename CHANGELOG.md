@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.9 — Gen 1 party and PC icon fix
+
+Gen 1 party, PC, and selection menus use a dedicated two-frame icon sheet rather than the front battle sprite. Shedinja now registers a 16×32 static icon derived from its credited Gen 1 front artwork and maps that icon directly to the Shedinja species record. Oak, Pokédex, summary, battle, encounter, Wonder Guard, and starter behavior are otherwise unchanged.
+
 ## 0.1.8 — Gold presentation and one-HP fixes; Gen 1 Oak preview repair
 
 Gold now supplies a native party-menu icon, mounted static portrait paths for Elm’s choice preview and the summary screen, and a lifecycle repair that enforces Shedinja’s defining **1 maximum HP** after catches, scripted gifts, transfers, level-up refreshes, and save loading. The battle animation remains unchanged.
