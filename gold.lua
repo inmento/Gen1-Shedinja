@@ -325,11 +325,11 @@ function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
     return next(path, ctx)
   end, 50)
 
-  local battleItems = require("mods.shedninja.battle_items").installGold(
+  local battleItems = require("mods.shedinja.battle_items").installGold(
     mod, speciesId, teraItemId, balloonItemId)
-  require("mods.shedninja.wonder_guard").installGold(
+  require("mods.shedinja.wonder_guard").installGold(
     mod, speciesId, itemId, battleItems)
-  require("mods.shedninja.encounters").installGold(mod, speciesId, function()
+  require("mods.shedinja.encounters").installGold(mod, speciesId, function()
     return ownsWonderGuardShedinja(mod.game and mod.game.save, speciesId, itemId)
   end)
 

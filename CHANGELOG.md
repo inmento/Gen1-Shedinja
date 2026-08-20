@@ -1,5 +1,12 @@
 # Changelog
 
+
+## 0.3.0 — Package spelling and repository migration
+
+The package identity has been corrected from the misspelled **`shedninja`** to **`shedinja`**, matching the official Pokémon spelling. The public repository has also moved from `inmento/Gen1-Shedinja` to **`inmento/Shedinja`**. GitHub keeps the former repository URL as a redirect, but manifests, release assets, optional integrations, the compatibility bridge, and both mod indexes now use the corrected URL directly.
+
+Because Gen1Recomp identifies installed mods by manifest ID, this is a one-time **package migration**, not a normal in-place launcher update. Remove the old `shedninja` install, then import or install `shedinja-0.3.0.zip`. The gameplay content from 0.2.3—including the Electric Tera Orb and Air Balloon—remains intact; this release corrects identity, module paths, archive naming, and integration metadata.
+
 ## 0.2.3 — Electric Tera Orb and Air Balloon battle options
 
 This release adds two permanent, reusable **battle-only** items inspired by the Electric Tera + Air Balloon Shedinja interaction. They are deliberately bounded to reproduce a specific defensive choice without creating free generic item use.
@@ -54,9 +61,9 @@ This replaces the separate Crystal 251-specific companion. Core Shedinja remains
 
 ## 0.2.0 — Shedinja package identity and index repair
 
-The mod package and manifest ID are now **`shedninja`**, and the release archive is named `shedninja-0.2.0.zip`. This replaces the legacy `gen1_shedinja` package identity so the manifest, installed folder, internal module paths, bridge requirements, and personal-index entry all use one consistent name.
+The mod package and manifest ID are now **`shedinja`**, and the release archive is named `shedinja-0.2.0.zip`. This replaces the legacy `gen1_shedinja` package identity so the manifest, installed folder, internal module paths, bridge requirements, and personal-index entry all use one consistent name.
 
-The personal index now points at this current release asset instead of an outdated listing. Because Gen1Recomp treats a changed manifest ID as a distinct installed mod, remove the retired `gen1_shedinja` copy and install this `shedninja` package once; future updates will use the corrected repository metadata and package identity.
+The personal index now points at this current release asset instead of an outdated listing. Because Gen1Recomp treats a changed manifest ID as a distinct installed mod, remove the retired `gen1_shedinja` copy and install this `shedinja` package once; future updates will use the corrected repository metadata and package identity.
 
 ## 0.1.12 — Crystal 251 coexistence
 

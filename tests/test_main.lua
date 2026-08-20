@@ -19,19 +19,19 @@ end
 package.preload["src.core.GameVersion"] = function()
   return { get = function() return "red" end }
 end
-package.preload["mods.shedninja.wonder_guard"] = function()
+package.preload["mods.shedinja.wonder_guard"] = function()
   return { install = function(_, shedinjaId, itemId)
     assert(shedinjaId == "SHEDINJA")
     assert(itemId == "WONDER_GUARD")
   end }
 end
-package.preload["mods.shedninja.battle_items"] = function()
+package.preload["mods.shedinja.battle_items"] = function()
   return { installGen1 = function(_, shedinjaId, teraItemId, balloonItemId)
     assert(shedinjaId == "SHEDINJA")
     assert(teraItemId == "ELEC_TERA_ORB" and balloonItemId == "AIR_BALLOON")
   end }
 end
-package.preload["mods.shedninja.encounters"] = function()
+package.preload["mods.shedinja.encounters"] = function()
   return { install = function(_, shedinjaId)
     assert(shedinjaId == "SHEDINJA")
   end }

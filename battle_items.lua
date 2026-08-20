@@ -185,16 +185,16 @@ function BattleItems.installGold(mod, shedinjaId, teraItemId, balloonItemId)
   -- these registered mod IDs while their live item records exist. Every native
   -- item continues through the original method untouched.
   local BattleState = require("src.ui.gen2.BattleState")
-  local wrapper = BattleState._shedninjaBattleItemWrapper
+  local wrapper = BattleState._shedinjaBattleItemWrapper
   if not wrapper then
     wrapper = {
       original = BattleState.useItem,
       handlers = {},
     }
-    BattleState._shedninjaBattleItemWrapper = wrapper
+    BattleState._shedinjaBattleItemWrapper = wrapper
     BattleState.useItem = function(self, itemId)
-      local handler = BattleState._shedninjaBattleItemWrapper
-        and BattleState._shedninjaBattleItemWrapper.handlers[itemId]
+      local handler = BattleState._shedinjaBattleItemWrapper
+        and BattleState._shedinjaBattleItemWrapper.handlers[itemId]
       if handler and handler.enabled(self, itemId) then
         return handler.use(self, itemId)
       end

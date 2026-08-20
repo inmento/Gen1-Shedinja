@@ -4,10 +4,10 @@ package.path = "/home/ubuntu/reference_gen1recomp0210_source/?.lua;/home/ubuntu/
 local Manifest = require("src.mods.Manifest")
 local ModTargets = require("src.mods.ModTargets")
 local raw = {
-  id = "shedninja",
+  id = "shedinja",
   name = "Shedinja",
-  version = "0.2.1",
-  github = "inmento/Gen1-Shedinja",
+  version = "0.3.0",
+  github = "inmento/Shedinja",
   api = 2,
   entry = "main.lua",
   profile = "overhaul",
@@ -17,7 +17,7 @@ local raw = {
   optional_dependencies = {
     {
       id = "shedinja_expanded_bridge",
-      range = ">=0.1.3 <1.0.0",
+      range = ">=0.1.4 <1.0.0",
       games = { "gen1", "gen2" },
       github = "inmento/Shedinja-Expanded-Bridge",
     },
@@ -34,9 +34,9 @@ local raw = {
   description = "Standalone Shedinja expansion for Red/Blue/Yellow and Gold.",
 }
 local manifest = Manifest.validate(raw, root)
-assert(manifest.id == "shedninja")
-assert(manifest.version == "0.2.1", "manifest must carry the unified bridge relationship update")
-assert(manifest.github == "inmento/Gen1-Shedinja",
+assert(manifest.id == "shedinja")
+assert(manifest.version == "0.3.0", "manifest must carry the corrected package-identity migration")
+assert(manifest.github == "inmento/Shedinja",
   "manifest must declare the repository used by launcher updates")
 assert(manifest.gen2compat == true,
   "manifest must declare Gold compatibility")

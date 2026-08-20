@@ -132,15 +132,15 @@ if GameVersion.get() == "gold" then
   -- Gold has its own schema, palettes, held-item flow, and encounter maps.
   -- Keep that implementation isolated so the working Gen 1 branch below is
   -- never registered or modified during a Gold boot.
-  return require("mods.shedninja.gold").install(
+  return require("mods.shedinja.gold").install(
     mod, SHEDINJA, WONDER_GUARD, ELEC_TERA_ORB, AIR_BALLOON)
 end
 
 registerContent()
-require("mods.shedninja.wonder_guard").install(mod, SHEDINJA, WONDER_GUARD)
-require("mods.shedninja.battle_items").installGen1(
+require("mods.shedinja.wonder_guard").install(mod, SHEDINJA, WONDER_GUARD)
+require("mods.shedinja.battle_items").installGen1(
   mod, SHEDINJA, ELEC_TERA_ORB, AIR_BALLOON)
-require("mods.shedninja.encounters").install(mod, SHEDINJA)
+require("mods.shedinja.encounters").install(mod, SHEDINJA)
 
 mod.events:on("game.ready", function(ev)
   grantWonderGuard(ev.game)

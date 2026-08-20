@@ -1,8 +1,8 @@
 # Shedinja for Gen1Recomp
 
-**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, base HP 1, generation-appropriate wild encounters, a deliberately scoped Wonder Guard implementation, and two optional temporary battle mechanics for the player’s active Shedinja. Version **0.2.3** uses the consistent package ID **`shedninja`** and provides one optional compatibility bridge for Crystal 251 in R/B/Y or Expanded Species in Gold, while preserving standalone behavior in every supported game.
+**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, base HP 1, generation-appropriate wild encounters, a deliberately scoped Wonder Guard implementation, and two optional temporary battle mechanics for the player’s active Shedinja. Version **0.3.0** uses the consistent package ID **`shedinja`** and provides one optional compatibility bridge for Crystal 251 in R/B/Y or Expanded Species in Gold, while preserving standalone behavior in every supported game.
 
-## Version 0.2.3 at a glance
+## Version 0.3.0 at a glance
 
 | Game | Internal species slot | National Dex number | Battle art | Wonder Guard model |
 |---|---:|---:|---|---|
@@ -58,13 +58,13 @@ Gold also inserts a Shedinja entry into its `gen2Pokedex` data at game-ready tim
 
 ## Installation and package migration
 
-Install the current `shedninja-0.2.3.zip` release through your index or from GitHub Releases. The retired releases used the manifest ID `gen1_shedinja`; because Gen1Recomp treats the renamed `shedninja` package as a distinct mod, remove the old `gen1_shedinja` install and then install `shedninja` once. Future releases will update normally through the launcher.
+Install the current `shedinja-0.2.3.zip` release through your index or from GitHub Releases. The retired releases used the manifest ID `gen1_shedinja`; because Gen1Recomp treats the renamed `shedinja` package as a distinct mod, remove the old `gen1_shedinja` install and then install `shedinja` once. Future releases will update normally through the launcher.
 
 ## Compatibility
 
 This mod is designed to coexist with the user’s non-roster gameplay mods, including Starter Picker, Item Randomizer, Gym Leader Shuffle, Randomized Gym Challenge, and Sound Effect Replacer. It is standalone: none of those mods is required for Shedinja to load, appear, receive Wonder Guard, or display its Dex content.
 
-> **Roster-expansion guidance:** Use the single [Shedinja Compatibility Bridge](https://github.com/inmento/Shedinja-Expanded-Bridge/releases) with core Shedinja 0.2.2+ when either supported framework is active. In Red, Blue, or Yellow with Crystal 251, it moves Shedinja to internal index `252`, retains National Dex #292, and supplies Crystal split-stat metadata. In Gold with Expanded Species, it preserves Shedinja’s framework-aware #292 identity and presentation. **Kanto Reforged** and unrelated roster/Dex/index-overhaul mods remain unsupported unless they provide their own dedicated compatibility bridge.
+> **Roster-expansion guidance:** Use the single [Shedinja Compatibility Bridge](https://github.com/inmento/Shedinja-Expanded-Bridge/releases) with core Shedinja 0.3.0+ when either supported framework is active. In Red, Blue, or Yellow with Crystal 251, it moves Shedinja to internal index `252`, retains National Dex #292, and supplies Crystal split-stat metadata. In Gold with Expanded Species, it preserves Shedinja’s framework-aware #292 identity and presentation. **Kanto Reforged** and unrelated roster/Dex/index-overhaul mods remain unsupported unless they provide their own dedicated compatibility bridge.
 
 Gym Leader Shuffle and Randomized Gym Challenge remain mutually exclusive with each other because they edit the same gym content, but either may be used with Shedinja when enabled alone.
 
@@ -84,4 +84,4 @@ See [CREDITS.md](CREDITS.md) for the complete source links, attribution details,
 
 ## Scope and status
 
-This is a public **0.2.3** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, and battle-behavior results before further species or progression mechanics are added.
+This is a public **0.3.0** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, and battle-behavior results before further species or progression mechanics are added.
