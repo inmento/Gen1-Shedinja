@@ -55,16 +55,16 @@ end
 
 teraOn = true
 local damage, info = call("battle.damage", nativeDamage, {
-  battle = battle, target = player, move = { id = "EARTHQUAKE", type = "GROUND" }, opts = {},
+  battle = battle, target = player, move = { id = "EARTHQUAKE", type = "GROUND", power = 100 }, opts = {},
 })
 assert(damage == 20 and info.effectiveness == 20,
   "Electric Tera must allow Ground through Wonder Guard using Electric effectiveness")
 
 damage, info = call("battle.damage", nativeDamage, {
-  battle = battle, target = player, move = { id = "EMBER", type = "FIRE" }, opts = {},
+  battle = battle, target = player, move = { id = "EMBER", type = "FIRE", power = 40 }, opts = {},
 })
-assert(damage == 0 and info.wonderGuard == true and info.effectiveness == 10,
-  "Electric Tera must block a neutral Fire hit through Wonder Guard")
+assert(damage == 0 and info.wonderGuard == true and info.effectiveness == 0,
+  "Electric Tera must resolve a blocked neutral Fire hit as true type immunity")
 
 local accuracyCalls = 0
 assert(call("battle.accuracy", function()
@@ -83,14 +83,14 @@ assert(call("battle.accuracy", function() return true end, {
 teraOn = false
 player.item = nil
 damage = call("battle.damage", nativeDamage, {
-  battle = battle, target = player, move = { id = "EMBER", type = "FIRE" }, opts = {},
+  battle = battle, target = player, move = { id = "EMBER", type = "FIRE", power = 40 }, opts = {},
 })
 assert(damage == 20, "player Shedinja without held Wonder Guard or Orb must remain unguarded")
 
 battle.player = { species = "PIKACHU" }
 teraOn = true
 damage = call("battle.damage", nativeDamage, {
-  battle = battle, target = battle.player, move = { id = "EMBER", type = "FIRE" }, opts = {},
+  battle = battle, target = battle.player, move = { id = "EMBER", type = "FIRE", power = 40 }, opts = {},
 })
 assert(damage == 20, "the Electric overlay must never protect another player species")
 

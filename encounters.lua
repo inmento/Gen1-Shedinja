@@ -6,9 +6,10 @@ local Encounters = {}
 local PLACEMENTS = {
   ROUTE_1 = { terrain = "grass", chance = 5, minLevel = 3, maxLevel = 5 },
   ROUTE_4 = { terrain = "grass", chance = 7, minLevel = 10, maxLevel = 12 },
-  VICTORY_ROAD_1 = { terrain = "indoor", chance = 10, minLevel = 36, maxLevel = 38 },
-  VICTORY_ROAD_2 = { terrain = "indoor", chance = 10, minLevel = 36, maxLevel = 38 },
-  VICTORY_ROAD_3 = { terrain = "indoor", chance = 10, minLevel = 36, maxLevel = 38 },
+  -- The Gen 1 encounter hook emits the floor-qualified map IDs below.
+  VICTORY_ROAD_1F = { terrain = "indoor", chance = 10, minLevel = 36, maxLevel = 38 },
+  VICTORY_ROAD_2F = { terrain = "indoor", chance = 10, minLevel = 36, maxLevel = 38 },
+  VICTORY_ROAD_3F = { terrain = "indoor", chance = 10, minLevel = 36, maxLevel = 38 },
 }
 
 local function copyEncounter(encounter)

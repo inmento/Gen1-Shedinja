@@ -1,16 +1,18 @@
 # Shedinja for Gen1Recomp
 
-**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, strict one-HP behavior across every lifecycle path, generation-appropriate wild encounters, a deliberately scoped Wonder Guard implementation, and two optional temporary battle mechanics for the player’s active Shedinja. Version **0.3.3** uses the consistent package ID **`shedinja`** and provides one optional compatibility bridge for Crystal 251 in R/B/Y or Expanded Species in Gold, while preserving standalone behavior in every supported game.
+**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, strict one-HP behavior across every lifecycle path, generation-appropriate wild encounters, a deliberately scoped Wonder Guard implementation, and two optional temporary battle mechanics for the player’s active Shedinja. Version **0.3.4** uses the consistent package ID **`shedinja`** and provides one optional compatibility bridge for Crystal 251 in R/B/Y or Expanded Species in Gold, while preserving standalone behavior in every supported game.
 
-## Version 0.3.3 Potato Voxel orientation compatibility
+## Version 0.3.4 Gen 1 front/back roles, encounters, and Wonder Guard
 
-Potato Voxel’s staged 3D renderer mirrors the player Pokémon card after its own battle hook requests front art for the player side. Shedinja now detects that exact downstream staged-battle path. It keeps the normal credited back sprite in ordinary battles, but supplies a mechanically pre-mirrored copy only for Potato Voxel’s staged player card; Potato Voxel’s own mirror then restores the credited back art in the correct orientation. Oak, Pokédex, summary, and other portrait contexts remain front-facing, and other species are unaffected.
+The two credited Gen 1 PNG filenames are historically opposite their intended roles. The detailed face-forward art is physically `assets/sprites/shedinja_back.png`; it is now used for Oak, Pokédex, party portrait, wild battles, and trainer-enemy battles. The hollow-shell player-back art is physically `assets/sprites/shedinja_front.png`; it is now used only for the player’s battle position. The files are **not renamed**, and this update makes **no battle-scale adjustment**. It only corrects their logical assignment in species registration and final sprite resolution.
+
+Gen 1 Victory Road encounters now use the floor-qualified engine keys `VICTORY_ROAD_1F`, `VICTORY_ROAD_2F`, and `VICTORY_ROAD_3F`, restoring the intended 10% cave encounter replacements. Wonder Guard also now resolves a blocked non-super-effective direct attack as the engine’s normal **“It doesn’t affect…”** outcome rather than a successful-looking zero-damage hit. This covers ordinary moves such as Bubble and the neutral combined Bug/Ghost Poison Sting matchup, plus alternate direct-damage paths including fixed damage, OHKO, Counter, Mirror Coat, and Bide. Status effects, indirect damage, and Struggle remain outside the protection.
 
 ## Version 0.3.2 corrective update
 
 Gen 1 wild Shedinja is now normalized to exactly 1 current HP and 1 maximum HP inside the wild-battle factory, before its first opponent HUD and sprite are created. This also ensures a caught wild Shedinja begins life with the correct HP record. Shedinja’s unique post-level-up repair then resets its current and maximum HP to 1 after every ordinary stat recalculation, while leaving every other species unchanged.
 
-The Gen 1 opponent/wild front art now uses a Shedinja-only 0.6× battle scale so the tightly framed credited 56×56 artwork fits the normal opponent slot. The player back remains at its intended 1× scale. The Gen 1 party/PC/selection icon is now registered directly to Shedinja’s species ID, repairing the blank PKMN-screen image.
+The Gen 1 party/PC/selection icon is registered directly to Shedinja’s species ID, repairing the blank PKMN-screen image. The battle-scale overrides remain unchanged in 0.3.4; the sprite correction in this release is strictly a front/back role assignment.
 
 ## Version 0.3.1 corrective update
 
@@ -76,7 +78,7 @@ Gold also inserts a Shedinja entry into its `gen2Pokedex` data at game-ready tim
 
 ## Installation and package migration
 
-Install the current `shedinja-0.3.3.zip` release through your index or from GitHub Releases. The retired package identity was the misspelled `shedninja`; because Gen1Recomp treats the corrected `shedinja` package as a distinct mod, remove the old `shedninja` install and then install `shedinja` once. Future releases update normally through the launcher.
+Install the current `shedinja-0.3.4.zip` release through your index or from GitHub Releases. The retired package identity was the misspelled `shedninja`; because Gen1Recomp treats the corrected `shedinja` package as a distinct mod, remove the old `shedninja` install and then install `shedinja` once. Future releases update normally through the launcher.
 
 ## Compatibility
 
@@ -102,4 +104,4 @@ See [CREDITS.md](CREDITS.md) for the complete source links, attribution details,
 
 ## Scope and status
 
-This is a public **0.3.3** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, starter, and battle-behavior results before further species or progression mechanics are added.
+This is a public **0.3.4** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, starter, and battle-behavior results before further species or progression mechanics are added.

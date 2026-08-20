@@ -44,7 +44,7 @@ local route4 = transform(nextEncounter, base, {
 assert(route4.species == "SHEDINJA" and route4.level == 11,
   "Route 4 did not produce the configured Shedinja encounter")
 
-for _, mapId in ipairs({ "VICTORY_ROAD_1", "VICTORY_ROAD_2", "VICTORY_ROAD_3" }) do
+for _, mapId in ipairs({ "VICTORY_ROAD_1F", "VICTORY_ROAD_2F", "VICTORY_ROAD_3F" }) do
   local victory = transform(nextEncounter, base, {
     mapId = mapId, terrain = "indoor", rng = sequence({ 1, 37 }),
   })
@@ -62,9 +62,15 @@ local unchangedMap = transform(nextEncounter, base, {
 })
 assert(unchangedMap == base, "non-target map encounter should stay vanilla")
 
+local obsoleteVictoryKey = transform(nextEncounter, base, {
+  mapId = "VICTORY_ROAD_1", terrain = "indoor", rng = sequence({}),
+})
+assert(obsoleteVictoryKey == base,
+  "obsolete non-floor-qualified Victory Road map IDs must not masquerade as live maps")
+
 local unchangedTerrain = transform(nextEncounter, base, {
   mapId = "ROUTE_4", terrain = "water", rng = sequence({}),
 })
 assert(unchangedTerrain == base, "wrong terrain encounter should stay vanilla")
 
-print("Shedinja Route 1, Route 4, and Victory Road encounter tests passed")
+print("Shedinja Route 1, Route 4, and floor-qualified Victory Road encounter tests passed")

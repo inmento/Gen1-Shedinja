@@ -310,16 +310,25 @@ local battle = { player = player, enemy = enemy, game = game, data = { type_char
 } } } }
 local function neutral() return 20, { typeMult = 10 } end
 local function super() return 20, { typeMult = 20 } end
-local amount, info = damage.callback(neutral, { battle = battle, target = player })
+local amount, info = damage.callback(neutral, {
+  battle = battle, target = player,
+  move = { id = "BUBBLE", type = "WATER", power = 20 },
+})
 assert(amount == 0 and info.wonderGuard == true,
   "Gold Wonder Guard must block neutral damage while the player item is held")
-assert(damage.callback(super, { battle = battle, target = player }) == 20,
-  "Gold Wonder Guard must allow super-effective damage")
+assert(damage.callback(super, {
+  battle = battle, target = player,
+  move = { id = "EMBER", type = "FIRE", power = 40 },
+}) == 20, "Gold Wonder Guard must allow super-effective damage")
 player.item = nil
-assert(damage.callback(neutral, { battle = battle, target = player }) == 20,
-  "Gold player Shedinja must not have Wonder Guard without the held item")
-assert(damage.callback(neutral, { battle = battle, target = enemy }) == 0,
-  "Gold enemy Shedinja must have intrinsic Wonder Guard without a held item")
+assert(damage.callback(neutral, {
+  battle = battle, target = player,
+  move = { id = "BUBBLE", type = "WATER", power = 20 },
+}) == 20, "Gold player Shedinja must not have Wonder Guard without the held item")
+assert(damage.callback(neutral, {
+  battle = battle, target = enemy,
+  move = { id = "BUBBLE", type = "WATER", power = 20 },
+}) == 0, "Gold enemy Shedinja must have intrinsic Wonder Guard without a held item")
 assert(damage.callback(neutral, { battle = battle, target = player, opts = { typeless = true } }) == 20,
   "Gold Wonder Guard must not suppress typeless damage")
 local accuracyCalls = 0

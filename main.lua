@@ -87,19 +87,21 @@ local function registerContent()
     catchRate = 45,
     growthRate = "MEDIUM_FAST",
     frontSize = 5,
-    -- Gen 1 draws a player back pic at 2x unless the species overrides that
-    -- default. This art is already a full 48×48 back sprite, so 1x keeps it
-    -- inside the normal player-side battle space rather than doubling it.
+    -- The hollow shell art lives in shedinja_front.png but is the intended
+    -- player-side battle-back image. Gen 1 normally draws a player back pic at
+    -- 2x, so this species-level 1x override prevents that 56×56 canvas from
+    -- filling the entire player battle space.
     battleScaleBack = 1,
-    -- The credited front art fills its 56×56 source canvas more tightly than
-    -- native front sprites. Scale only Shedinja's enemy/wild art down to keep
-    -- it in the ordinary opponent slot without altering any other Pokémon.
+    -- The detailed face-forward art lives in shedinja_back.png but is the
+    -- intended portrait/enemy-front image. It needs a Shedinja-only scale
+    -- override to fit the ordinary opponent battle slot.
     battleScaleFront = 0.6,
-    -- Oak's starter Dex preview, the Gen 1 Dex menu, and battle all resolve
-    -- these mounted paths. The sprite hook below repeats this mapping at the
-    -- final resolver seam so a late UI/battle path override cannot swap sides.
-    spriteFront = mod.path .. "/assets/sprites/shedinja_front.png",
-    spriteBack = mod.path .. "/assets/sprites/shedinja_back.png",
+    -- The physical filenames are deliberately retained for compatibility with
+    -- existing archives. Their logical presentation roles are swapped here and
+    -- repeated in the resolver below: face-forward for portrait/enemy front;
+    -- hollow shell for the player battle back.
+    spriteFront = mod.path .. "/assets/sprites/shedinja_back.png",
+    spriteBack = mod.path .. "/assets/sprites/shedinja_front.png",
     trueColor = true,
     cry = SHEDINJA_UNUSED_CRY_43,
     level1Moves = { "SCRATCH", "HARDEN", "LEECH_LIFE" },
@@ -207,35 +209,20 @@ require("mods.shedinja.battle_items").installGen1(
   mod, SHEDINJA, ELEC_TERA_ORB, AIR_BALLOON)
 require("mods.shedinja.encounters").install(mod, SHEDINJA)
 
-local frontSprite = mod.path .. "/assets/sprites/shedinja_front.png"
-local backSprite = mod.path .. "/assets/sprites/shedinja_back.png"
--- Potato Voxel mirrors the player Pokémon card inside a staged 3D battle. This
--- deterministic horizontal reverse cancels that later renderer transform, but
--- it must be selected only when Potato has actually changed the original
--- player-back request into a front request. Ordinary 2D battles keep `backSprite`.
-local potatoVoxelBackSprite = mod.path .. "/assets/sprites/shedinja_back_potato_voxel.png"
-local function potatoVoxelActive()
-  if type(mod.find) ~= "function" then return false end
-  local ok, found = pcall(mod.find, "potato_voxel")
-  return ok and found ~= nil
-end
+-- These role names describe where art is presented, not the historical
+-- filenames in the asset folder. The detailed face-forward PNG is the front;
+-- the hollow-shell PNG is the player battle back. This hotfix intentionally
+-- has no renderer-specific compatibility layer: the mapping below is the
+-- ordinary Gen 1 presentation contract only.
+local frontSprite = mod.path .. "/assets/sprites/shedinja_back.png"
+local backSprite = mod.path .. "/assets/sprites/shedinja_front.png"
 
--- Resolve Shedinja art outside generic presentation layers. Potato Voxel's
--- staged battle wrapper (priority 1000) asks downstream providers for a front
--- image on an original player-back request; its 3D scene then mirrors that
--- player card. This higher-priority Shedinja-only wrapper observes the
--- downstream result. It supplies the pre-mirrored back image only in that
--- exact staged path, so the later Potato mirror restores the credited back art
--- to its intended orientation. Oak, Dex, and summary callers always receive
--- the credited front art. Every other species remains on the normal chain.
+-- Resolve Shedinja at the final sprite seam so Oak, Pokédex, party portrait,
+-- wild/enemy battle, and player battle callers consistently receive their
+-- correct roles. Every other species remains on the normal presentation chain.
 mod.hooks:wrap("pokemon.sprite", function(next, path, ctx)
   if not (ctx and ctx.species == SHEDINJA) then return next(path, ctx) end
-  if ctx.side ~= "back" then return frontSprite end
-  if ctx.kind ~= "battle" or not potatoVoxelActive() then return backSprite end
-
-  local downstream = next(path, ctx)
-  if downstream == frontSprite then return potatoVoxelBackSprite end
-  return backSprite
+  return ctx.side == "back" and backSprite or frontSprite
 end, 2000)
 
 mod.events:on("game.ready", function(ev)

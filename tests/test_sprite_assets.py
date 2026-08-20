@@ -18,7 +18,7 @@ for name, size in expected_gen1.items():
 back = Image.open(root / 'assets' / 'sprites' / 'shedinja_back.png').convert('RGBA')
 potato_back = Image.open(root / 'assets' / 'sprites' / 'shedinja_back_potato_voxel.png').convert('RGBA')
 assert list(back.transpose(Image.Transpose.FLIP_LEFT_RIGHT).getdata()) == list(potato_back.getdata()), \
-    'Potato Voxel Shedinja back asset must be an exact horizontal mirror of the credited back art'
+    'Potato Voxel helper asset must remain an exact horizontal mirror of its legacy source art'
 
 icon = Image.open(root / 'assets' / 'sprites' / 'shedinja_icon.png').convert('RGBA')
 assert list(icon.crop((0, 0, 16, 16)).getdata()) == list(icon.crop((0, 16, 16, 32)).getdata()), \

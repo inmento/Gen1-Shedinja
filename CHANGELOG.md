@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.4 — Gen 1 sprite roles, encounters, and Wonder Guard hit resolution
+
+This hotfix corrects the live Gen 1 presentation mismatch without renaming either credited PNG or changing any battle scale. Direct inspection and in-game evidence confirm that the physical filenames are reversed relative to their intended roles: `assets/sprites/shedinja_back.png` contains the detailed **face-forward** art and is now used for the Pokédex, Oak, party portrait, wild battles, and trainer-enemy battles; `assets/sprites/shedinja_front.png` contains the hollow-shell **back** art and is now used only for the player’s battle-back presentation. The final `pokemon.sprite` resolver enforces the same mapping, so no later UI path can silently reverse it. This release deliberately does **not** add a renderer-specific compatibility change.
+
+Wild Shedinja’s intended Victory Road placements now use the actual Gen 1 encounter-hook keys: `VICTORY_ROAD_1F`, `VICTORY_ROAD_2F`, and `VICTORY_ROAD_3F`. The old non-floor-qualified keys never matched the live maps, which is why those encounters did not appear.
+
+Wonder Guard now turns an ordinary non-super-effective direct attack into the engine’s genuine type-immunity result rather than merely returning zero damage after the move has already registered as a successful hit. This prevents moves such as Bubble and the neutral combined Bug/Ghost Poison Sting matchup from flashing as zero-damage hits; the battle follows its normal **“It doesn’t affect…”** path instead. Fixed damage, OHKO, Counter, Mirror Coat, and Bide’s alternate direct-damage paths are covered as well. Status effects, indirect damage, and Struggle remain intentionally outside Wonder Guard.
+
+The full Shedinja suite passed after these changes: Gen 1 content, verified sprite-role resolution, floor-qualified encounters, Wonder Guard including Bubble/Poison Sting/Bide, battle items, Gold content and Electric Tera interactions, compatibility, manifest validation, cry schema, and sprite assets.
+
 ## 0.3.3 — Potato Voxel staged-battle orientation compatibility
 
 Potato Voxel’s staged 3D battles convert a player-side back-sprite request into front art and then horizontally mirror the player card so it faces the opponent. That behavior is appropriate for standard front art but made Shedinja’s player presentation use the wrong view and left a supplied back sprite reversed. Shedinja now runs a narrowly scoped outer sprite resolver for `SHEDINJA` only. In a normal battle it retains the credited 48×48 back art; when Potato Voxel’s own downstream staged-battle resolver has selected Shedinja’s front art, Shedinja supplies a deterministic pre-mirrored back asset so Potato Voxel’s subsequent mirror restores the credited back art in its intended orientation.

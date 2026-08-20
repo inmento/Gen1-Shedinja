@@ -89,8 +89,8 @@ local shedinja = assert(registered.SHEDINJA, "Shedinja species was not registere
 assert(shedinja.dex == 292 and shedinja.index == 152,
   "Shedinja must retain internal slot 152 while displaying National Dex #292")
 assert(shedinja.types[1] == "BUG" and shedinja.types[2] == "GHOST", "Shedinja must be Bug/Ghost")
-assert(shedinja.spriteFront == root .. "/assets/sprites/shedinja_front.png"
-  and shedinja.spriteBack == root .. "/assets/sprites/shedinja_back.png",
+assert(shedinja.spriteFront == root .. "/assets/sprites/shedinja_back.png"
+  and shedinja.spriteBack == root .. "/assets/sprites/shedinja_front.png",
   "Gen 1 Oak and Dex screens must receive mounted Shedinja portrait paths")
 assert(shedinja.dexEntry.kind == "BUG/GHOST",
   "Gen 1 Shedinja Dex category must display BUG/GHOST rather than SHED")
@@ -157,43 +157,26 @@ assert(fainted.hp == 0 and fainted.stats.hp == 1,
   "a fainted Shedinja must retain 0 current HP while its maximum becomes 1")
 
 local downstreamCalls = 0
-local potatoStagesBattle = false
-local function potatoStyleNext(path, ctx)
+local function nextSprite(path)
   downstreamCalls = downstreamCalls + 1
-  -- This matches Potato Voxel's current wrapper: an installed but ordinary
-  -- battle keeps the requested back art; an actual staged battle asks its
-  -- downstream link for front art before its renderer mirrors the player card.
-  if potatoStagesBattle and ctx and ctx.side == "back" then
-    return root .. "/assets/sprites/shedinja_front.png"
-  end
   return "next/" .. path
 end
-local front = wraps["pokemon.sprite"].callback(potatoStyleNext,
+local portrait = wraps["pokemon.sprite"].callback(nextSprite,
   "fallback.png", { species = "SHEDINJA", side = "front", kind = "dex" })
-local ordinaryBack = wraps["pokemon.sprite"].callback(potatoStyleNext,
+local enemyBattle = wraps["pokemon.sprite"].callback(nextSprite,
+  "fallback.png", { species = "SHEDINJA", side = "front", kind = "battle" })
+local playerBattle = wraps["pokemon.sprite"].callback(nextSprite,
   "fallback.png", { species = "SHEDINJA", side = "back", kind = "battle" })
-assert(front == root .. "/assets/sprites/shedinja_front.png",
-  "Shedinja portrait callers must receive the front sprite")
-assert(ordinaryBack == root .. "/assets/sprites/shedinja_back.png" and downstreamCalls == 0,
-  "a normal battle must retain the credited unmirrored Shedinja back sprite")
+assert(portrait == root .. "/assets/sprites/shedinja_back.png"
+  and enemyBattle == root .. "/assets/sprites/shedinja_back.png",
+  "portraits and enemy battles must use the verified detailed face-forward art")
+assert(playerBattle == root .. "/assets/sprites/shedinja_front.png" and downstreamCalls == 0,
+  "player battles must use the verified hollow-shell back art")
 
-potatoVoxelInstalled, potatoStagesBattle = true, false
-local potatoOrdinaryBack = wraps["pokemon.sprite"].callback(potatoStyleNext,
-  "fallback.png", { species = "SHEDINJA", side = "back", kind = "battle" })
-assert(potatoOrdinaryBack == root .. "/assets/sprites/shedinja_back.png",
-  "Potato Voxel installed but not staging a battle must retain normal back art")
-
-potatoStagesBattle = true
-local potatoStageBack = wraps["pokemon.sprite"].callback(potatoStyleNext,
-  "fallback.png", { species = "SHEDINJA", side = "back", kind = "battle" })
-assert(potatoStageBack == root .. "/assets/sprites/shedinja_back_potato_voxel.png",
-  "a Potato Voxel staged player card must use the pre-mirrored Shedinja back asset")
-assert(downstreamCalls == 2,
-  "only installed Potato Voxel battle requests should reach its downstream stage check")
-local otherPath = wraps["pokemon.sprite"].callback(potatoStyleNext,
+local otherPath = wraps["pokemon.sprite"].callback(nextSprite,
   "fallback.png", { species = "SQUIRTLE", side = "back", kind = "battle" })
-assert(otherPath == root .. "/assets/sprites/shedinja_front.png" and downstreamCalls == 3,
-  "the Shedinja orientation fix must not change another species' presentation chain")
+assert(otherPath == "next/fallback.png" and downstreamCalls == 1,
+  "the Shedinja role fix must pass every other species through unchanged")
 
 local gifted = { species = "SHEDINJA", level = 5, hp = 16, stats = { hp = 16 } }
 game.save.party = { gifted }
