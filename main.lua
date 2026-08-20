@@ -209,15 +209,34 @@ require("mods.shedinja.encounters").install(mod, SHEDINJA)
 
 local frontSprite = mod.path .. "/assets/sprites/shedinja_front.png"
 local backSprite = mod.path .. "/assets/sprites/shedinja_back.png"
--- Resolve Shedinja art explicitly at the final species-sprite seam. This
--- preserves front art for Oak/Dex/summary callers and back art for the player
--- battle side even if another installed presentation layer supplies a late
--- generic path replacement.
+-- Potato Voxel mirrors the player Pokémon card inside a staged 3D battle. This
+-- deterministic horizontal reverse cancels that later renderer transform, but
+-- it must be selected only when Potato has actually changed the original
+-- player-back request into a front request. Ordinary 2D battles keep `backSprite`.
+local potatoVoxelBackSprite = mod.path .. "/assets/sprites/shedinja_back_potato_voxel.png"
+local function potatoVoxelActive()
+  if type(mod.find) ~= "function" then return false end
+  local ok, found = pcall(mod.find, "potato_voxel")
+  return ok and found ~= nil
+end
+
+-- Resolve Shedinja art outside generic presentation layers. Potato Voxel's
+-- staged battle wrapper (priority 1000) asks downstream providers for a front
+-- image on an original player-back request; its 3D scene then mirrors that
+-- player card. This higher-priority Shedinja-only wrapper observes the
+-- downstream result. It supplies the pre-mirrored back image only in that
+-- exact staged path, so the later Potato mirror restores the credited back art
+-- to its intended orientation. Oak, Dex, and summary callers always receive
+-- the credited front art. Every other species remains on the normal chain.
 mod.hooks:wrap("pokemon.sprite", function(next, path, ctx)
-  local resolved = next(path, ctx)
-  if not (ctx and ctx.species == SHEDINJA) then return resolved end
-  return ctx.side == "back" and backSprite or frontSprite
-end, 100)
+  if not (ctx and ctx.species == SHEDINJA) then return next(path, ctx) end
+  if ctx.side ~= "back" then return frontSprite end
+  if ctx.kind ~= "battle" or not potatoVoxelActive() then return backSprite end
+
+  local downstream = next(path, ctx)
+  if downstream == frontSprite then return potatoVoxelBackSprite end
+  return backSprite
+end, 2000)
 
 mod.events:on("game.ready", function(ev)
   local game = ev and ev.game

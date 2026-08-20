@@ -1,7 +1,7 @@
 {
   "id": "shedinja",
   "name": "Shedinja",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "github": "inmento/Shedinja",
   "api": 2,
   "entry": "main.lua",

@@ -50,9 +50,16 @@ local battleState = {
 }
 package.preload["src.battle.BattleState"] = function() return battleState end
 
+local potatoVoxelInstalled = false
 _G.mod = {
   path = root,
-  find = function() return nil end,
+  find = function(first, second)
+    local id = second or first
+    if id == "potato_voxel" and potatoVoxelInstalled then
+      return { id = "potato_voxel", version = "1.8.2", exports = {} }
+    end
+    return nil
+  end,
   content = {
     constants = registry(),
     items = registry(),
@@ -126,8 +133,8 @@ assert(type(callbacks["battle.started"]) == "function"
   and type(callbacks["battle.battler_switched"]) == "function"
   and type(callbacks["battle.ended"]) == "function",
   "Shedinja battle HP repair lifecycle handlers were not registered")
-assert(type(wraps["pokemon.sprite"]) == "table" and wraps["pokemon.sprite"].priority == 100,
-  "Shedinja front/back sprite resolver must be installed at final presentation priority")
+assert(type(wraps["pokemon.sprite"]) == "table" and wraps["pokemon.sprite"].priority == 2000,
+  "Shedinja sprite resolver must run outside Potato Voxel's player-back substitution")
 assert(type(wraps["script.command"]) == "table" and wraps["script.command"].priority == -20000,
   "post-gift Shedinja repair hook was not registered")
 assert(battleState._shedinjaOneHpWildFactory == true,
@@ -149,14 +156,44 @@ assert(boxed.hp == 1 and boxed.stats.hp == 1,
 assert(fainted.hp == 0 and fainted.stats.hp == 1,
   "a fainted Shedinja must retain 0 current HP while its maximum becomes 1")
 
-local front = wraps["pokemon.sprite"].callback(function(path) return "next/" .. path end,
+local downstreamCalls = 0
+local potatoStagesBattle = false
+local function potatoStyleNext(path, ctx)
+  downstreamCalls = downstreamCalls + 1
+  -- This matches Potato Voxel's current wrapper: an installed but ordinary
+  -- battle keeps the requested back art; an actual staged battle asks its
+  -- downstream link for front art before its renderer mirrors the player card.
+  if potatoStagesBattle and ctx and ctx.side == "back" then
+    return root .. "/assets/sprites/shedinja_front.png"
+  end
+  return "next/" .. path
+end
+local front = wraps["pokemon.sprite"].callback(potatoStyleNext,
   "fallback.png", { species = "SHEDINJA", side = "front", kind = "dex" })
-local back = wraps["pokemon.sprite"].callback(function(path) return "next/" .. path end,
+local ordinaryBack = wraps["pokemon.sprite"].callback(potatoStyleNext,
   "fallback.png", { species = "SHEDINJA", side = "back", kind = "battle" })
 assert(front == root .. "/assets/sprites/shedinja_front.png",
   "Shedinja portrait callers must receive the front sprite")
-assert(back == root .. "/assets/sprites/shedinja_back.png",
-  "player-side Shedinja battle callers must receive the back sprite")
+assert(ordinaryBack == root .. "/assets/sprites/shedinja_back.png" and downstreamCalls == 0,
+  "a normal battle must retain the credited unmirrored Shedinja back sprite")
+
+potatoVoxelInstalled, potatoStagesBattle = true, false
+local potatoOrdinaryBack = wraps["pokemon.sprite"].callback(potatoStyleNext,
+  "fallback.png", { species = "SHEDINJA", side = "back", kind = "battle" })
+assert(potatoOrdinaryBack == root .. "/assets/sprites/shedinja_back.png",
+  "Potato Voxel installed but not staging a battle must retain normal back art")
+
+potatoStagesBattle = true
+local potatoStageBack = wraps["pokemon.sprite"].callback(potatoStyleNext,
+  "fallback.png", { species = "SHEDINJA", side = "back", kind = "battle" })
+assert(potatoStageBack == root .. "/assets/sprites/shedinja_back_potato_voxel.png",
+  "a Potato Voxel staged player card must use the pre-mirrored Shedinja back asset")
+assert(downstreamCalls == 2,
+  "only installed Potato Voxel battle requests should reach its downstream stage check")
+local otherPath = wraps["pokemon.sprite"].callback(potatoStyleNext,
+  "fallback.png", { species = "SQUIRTLE", side = "back", kind = "battle" })
+assert(otherPath == root .. "/assets/sprites/shedinja_front.png" and downstreamCalls == 3,
+  "the Shedinja orientation fix must not change another species' presentation chain")
 
 local gifted = { species = "SHEDINJA", level = 5, hp = 16, stats = { hp = 16 } }
 game.save.party = { gifted }

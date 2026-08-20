@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.3 — Potato Voxel staged-battle orientation compatibility
+
+Potato Voxel’s staged 3D battles convert a player-side back-sprite request into front art and then horizontally mirror the player card so it faces the opponent. That behavior is appropriate for standard front art but made Shedinja’s player presentation use the wrong view and left a supplied back sprite reversed. Shedinja now runs a narrowly scoped outer sprite resolver for `SHEDINJA` only. In a normal battle it retains the credited 48×48 back art; when Potato Voxel’s own downstream staged-battle resolver has selected Shedinja’s front art, Shedinja supplies a deterministic pre-mirrored back asset so Potato Voxel’s subsequent mirror restores the credited back art in its intended orientation.
+
+Portrait, Oak, Pokédex, and summary callers remain explicitly front-facing. Other species are passed through unchanged, and Potato Voxel installed with staged battles inactive retains normal battle behavior. The compatibility image is mechanically generated from the credited Gen 1 back asset and is covered by an exact horizontal-flip asset test.
+
 ## 0.3.2 — Gen 1 wild reliability, strict one-HP lifecycle, and PKMN icon repair
 
 This corrective release closes the remaining Gen 1 Shedinja paths found in play testing. Wild Shedinja now receives the one-HP normalization **inside the Gen 1 wild-battle factory**, before the opponent sprite and first HP bar are created. Its captured record is therefore already normalized, and the existing save-load, scripted-gift, battle-start, switch-in, battle-end, and level-up protections remain in place. Shedinja’s HP is reset to 1 after every level-up stat recalculation; no other species takes that branch.

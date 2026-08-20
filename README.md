@@ -1,6 +1,10 @@
 # Shedinja for Gen1Recomp
 
-**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, strict one-HP behavior across every lifecycle path, generation-appropriate wild encounters, a deliberately scoped Wonder Guard implementation, and two optional temporary battle mechanics for the player’s active Shedinja. Version **0.3.2** uses the consistent package ID **`shedinja`** and provides one optional compatibility bridge for Crystal 251 in R/B/Y or Expanded Species in Gold, while preserving standalone behavior in every supported game.
+**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, strict one-HP behavior across every lifecycle path, generation-appropriate wild encounters, a deliberately scoped Wonder Guard implementation, and two optional temporary battle mechanics for the player’s active Shedinja. Version **0.3.3** uses the consistent package ID **`shedinja`** and provides one optional compatibility bridge for Crystal 251 in R/B/Y or Expanded Species in Gold, while preserving standalone behavior in every supported game.
+
+## Version 0.3.3 Potato Voxel orientation compatibility
+
+Potato Voxel’s staged 3D renderer mirrors the player Pokémon card after its own battle hook requests front art for the player side. Shedinja now detects that exact downstream staged-battle path. It keeps the normal credited back sprite in ordinary battles, but supplies a mechanically pre-mirrored copy only for Potato Voxel’s staged player card; Potato Voxel’s own mirror then restores the credited back art in the correct orientation. Oak, Pokédex, summary, and other portrait contexts remain front-facing, and other species are unaffected.
 
 ## Version 0.3.2 corrective update
 
@@ -72,7 +76,7 @@ Gold also inserts a Shedinja entry into its `gen2Pokedex` data at game-ready tim
 
 ## Installation and package migration
 
-Install the current `shedinja-0.3.2.zip` release through your index or from GitHub Releases. The retired package identity was the misspelled `shedninja`; because Gen1Recomp treats the corrected `shedinja` package as a distinct mod, remove the old `shedninja` install and then install `shedinja` once. Future releases update normally through the launcher.
+Install the current `shedinja-0.3.3.zip` release through your index or from GitHub Releases. The retired package identity was the misspelled `shedninja`; because Gen1Recomp treats the corrected `shedinja` package as a distinct mod, remove the old `shedninja` install and then install `shedinja` once. Future releases update normally through the launcher.
 
 ## Compatibility
 
@@ -98,4 +102,4 @@ See [CREDITS.md](CREDITS.md) for the complete source links, attribution details,
 
 ## Scope and status
 
-This is a public **0.3.2** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, starter, and battle-behavior results before further species or progression mechanics are added.
+This is a public **0.3.3** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, starter, and battle-behavior results before further species or progression mechanics are added.
