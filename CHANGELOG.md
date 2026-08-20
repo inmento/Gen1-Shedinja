@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.1 — Core export, Gen 1 starter, sprite, and one-HP corrections
+
+This corrective release fixes five issues found during Gen 1 play testing. The API 2 loader publishes a mod’s mutable `mod.exports` table rather than an initializer’s returned table; core Shedinja now assigns its bridge-facing exports directly to that table in both the Gen 1 and Gold paths. The redundant core-to-bridge optional ordering edge was also removed, leaving the bridge as the sole dependent and ensuring the core completes registration and export publication before the bridge starts.
+
+Shedinja’s Gen 1 player-side battle art now uses the intended back sprite at explicit **1×** scale. Gen1Recomp otherwise doubles a player back picture by default, which made the full-size 48×48 artwork appear oversized. The core also pins Shedinja’s final sprite resolution to its credited front art for Oak, Pokédex, and summary requests and its credited back art for player-side battle requests.
+
+Every Gen 1 scripted Shedinja gift now immediately grants `WONDER_GUARD`, `ELEC TERA ORB`, and `AIR BALLOON` after the Pokémon enters the party or PC. This includes Shedinja chosen through Starter Picker, so the player has Wonder Guard before overworld control resumes.
+
+Finally, Gen 1 now enforces Shedinja’s defining HP rule instead of relying only on a base-stat value. A living Shedinja is normalized to **1 current HP and 1 maximum HP**, while a fainted Shedinja remains at 0 current HP with a maximum of 1. The repair covers save loading, scripted gifts, battle start, switch-in, battle completion, and level-up processing.
 
 ## 0.3.0 — Package spelling and repository migration
 

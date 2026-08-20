@@ -1,7 +1,7 @@
 {
   "id": "shedinja",
   "name": "Shedinja",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "github": "inmento/Shedinja",
   "api": 2,
   "entry": "main.lua",
@@ -15,12 +15,6 @@
     "gen2"
   ],
   "optional_dependencies": [
-    {
-      "id": "shedinja_expanded_bridge",
-      "range": ">=0.1.4 <1.0.0",
-      "games": ["gen1", "gen2"],
-      "github": "inmento/Shedinja-Expanded-Bridge"
-    },
     {
       "id": "CRYSTAL_251",
       "range": ">=0.11.3 <1.0.0",

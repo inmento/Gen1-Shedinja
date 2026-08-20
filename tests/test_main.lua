@@ -1,6 +1,6 @@
 local root = assert(arg[1], "project root is required")
 
-local registered, patched, ready = {}, {}, nil
+local registered, patched, callbacks, wraps = {}, {}, {}, {}
 local function registry()
   return {
     register = function(_, id, value) registered[id] = value end,
@@ -36,6 +36,12 @@ package.preload["mods.shedinja.encounters"] = function()
     assert(shedinjaId == "SHEDINJA")
   end }
 end
+package.preload["src.battle.Timing"] = function()
+  return { hpBarPixels = function(hp, maxHp)
+    assert(maxHp == 1, "Shedinja battler HP bar must use max HP 1")
+    return hp > 0 and 48 or 0
+  end }
+end
 
 _G.mod = {
   path = root,
@@ -50,11 +56,13 @@ _G.mod = {
   },
   events = {
     on = function(_, name, callback)
-      assert(name == "game.ready")
-      ready = callback
+      callbacks[name] = callback
     end,
   },
-  hooks = { wrap = function() end },
+  hooks = { wrap = function(_, name, callback, priority)
+    wraps[name] = { callback = callback, priority = priority }
+  end },
+  exports = {},
 }
 
 local init = assert(dofile(root .. "/main.lua"), "Shedinja entry module did not return an initializer")
@@ -91,6 +99,8 @@ assert(lineCount == 4, "Shedinja Dex text must stay on one four-line page")
 assert(dexText == table.concat(expectedDexLines, "\n"),
   "Shedinja Dex text must use its approved explicit line breaks")
 assert(shedinja.baseStats.hp == 1, "Shedinja must retain base HP 1")
+assert(shedinja.battleScaleBack == 1,
+  "Gen 1 Shedinja player-back art must override the default 2x battle scale")
 assert(shedinja.trueColor == true, "Shedinja sprite art must opt out of 4-shade recoloring")
 local unusedCry = assert(registered.SHEDINJA_UNUSED_CRY_43,
   "Shedinja's dedicated unused $43 cry was not registered")
@@ -100,12 +110,59 @@ assert(shedinja.cry == "SHEDINJA_UNUSED_CRY_43",
   "Shedinja must point only to its dedicated unused $43 cry")
 assert(registered.NIDORAN_M == nil and patched.NIDORAN_M == nil,
   "the native base-0 Nidoran cry/species must not be modified")
-assert(type(ready) == "function", "game.ready grant handler was not registered")
+assert(mod.exports.SHEDINJA == "SHEDINJA",
+  "API 2 core exports must publish SHEDINJA for the compatibility bridge")
+assert(type(mod.exports.normalizeHp) == "function" and type(mod.exports.normalizeSaveHp) == "function",
+  "core HP repair helpers must be exported for bridge-safe lifecycle checks")
+assert(type(callbacks["game.ready"]) == "function", "game.ready grant handler was not registered")
+assert(type(callbacks["battle.started"]) == "function"
+  and type(callbacks["battle.battler_switched"]) == "function"
+  and type(callbacks["battle.ended"]) == "function",
+  "Shedinja battle HP repair lifecycle handlers were not registered")
+assert(type(wraps["pokemon.sprite"]) == "table" and wraps["pokemon.sprite"].priority == 100,
+  "Shedinja front/back sprite resolver must be installed at final presentation priority")
+assert(type(wraps["script.command"]) == "table" and wraps["script.command"].priority == -20000,
+  "post-gift Shedinja repair hook was not registered")
 
-local game = { save = { inventory = {} } }
-ready({ game = game })
+local data = { pokemon = { SHEDINJA = shedinja } }
+local starter = { species = "SHEDINJA", level = 5, hp = 16, stats = { hp = 16 } }
+local boxed = { species = "SHEDINJA", level = 5, hp = 16, stats = { hp = 16 } }
+local fainted = { species = "SHEDINJA", level = 5, hp = 0, stats = { hp = 16 } }
+local game = { data = data, save = { inventory = {}, party = { starter, fainted }, boxes = { { boxed } } } }
+callbacks["game.ready"]({ game = game })
 assert(game.save.inventory.WONDER_GUARD == 1, "Wonder Guard was not granted")
-ready({ game = game })
-assert(game.save.inventory.WONDER_GUARD == 1, "Wonder Guard grant duplicated")
+assert(game.save.inventory.ELEC_TERA_ORB == 1 and game.save.inventory.AIR_BALLOON == 1,
+  "battle-only Shedinja items were not granted")
+assert(starter.hp == 1 and starter.stats.hp == 1,
+  "starter Shedinja must be normalized to 1 current and maximum HP")
+assert(boxed.hp == 1 and boxed.stats.hp == 1,
+  "boxed Shedinja must be normalized to 1 current and maximum HP")
+assert(fainted.hp == 0 and fainted.stats.hp == 1,
+  "a fainted Shedinja must retain 0 current HP while its maximum becomes 1")
+
+local front = wraps["pokemon.sprite"].callback(function(path) return "next/" .. path end,
+  "fallback.png", { species = "SHEDINJA", side = "front", kind = "dex" })
+local back = wraps["pokemon.sprite"].callback(function(path) return "next/" .. path end,
+  "fallback.png", { species = "SHEDINJA", side = "back", kind = "battle" })
+assert(front == root .. "/assets/sprites/shedinja_front.png",
+  "Shedinja portrait callers must receive the front sprite")
+assert(back == root .. "/assets/sprites/shedinja_back.png",
+  "player-side Shedinja battle callers must receive the back sprite")
+
+local gifted = { species = "SHEDINJA", level = 5, hp = 16, stats = { hp = 16 } }
+game.save.party = { gifted }
+game.save.inventory = {}
+wraps["script.command"].callback(function() return true end,
+  { game = game }, "give_pokemon", {}, {})
+assert(gifted.hp == 1 and gifted.stats.hp == 1,
+  "a newly given Shedinja must be normalized immediately after insertion")
+assert(game.save.inventory.WONDER_GUARD == 1,
+  "a newly given Shedinja must receive WONDER GUARD before control returns")
+
+local enemyMon = { species = "SHEDINJA", level = 20, hp = 50, stats = { hp = 50 } }
+local enemy = { mon = enemyMon }
+callbacks["battle.started"]({ battle = { data = data, enemy = enemy } })
+assert(enemyMon.hp == 1 and enemyMon.stats.hp == 1 and enemy.shownHP == 1,
+  "enemy battle Shedinja must be normalized to 1 HP at battle start")
 
 print("main content tests passed")

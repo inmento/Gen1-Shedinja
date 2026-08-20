@@ -1,8 +1,16 @@
 # Shedinja for Gen1Recomp
 
-**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, base HP 1, generation-appropriate wild encounters, a deliberately scoped Wonder Guard implementation, and two optional temporary battle mechanics for the player’s active Shedinja. Version **0.3.0** uses the consistent package ID **`shedinja`** and provides one optional compatibility bridge for Crystal 251 in R/B/Y or Expanded Species in Gold, while preserving standalone behavior in every supported game.
+**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, strict one-HP behavior, generation-appropriate wild encounters, a deliberately scoped Wonder Guard implementation, and two optional temporary battle mechanics for the player’s active Shedinja. Version **0.3.1** uses the consistent package ID **`shedinja`** and provides one optional compatibility bridge for Crystal 251 in R/B/Y or Expanded Species in Gold, while preserving standalone behavior in every supported game.
 
-## Version 0.3.0 at a glance
+## Version 0.3.1 corrective update
+
+This release repairs the API 2 core export that the compatibility bridge verifies at boot and removes the core’s unnecessary reverse bridge ordering edge. The bridge remains optional, but when installed it now receives the active core’s published `SHEDINJA` handle in both generations.
+
+For Red, Blue, and Yellow, Shedinja’s player-side battle art now explicitly uses the back sprite at normal one-times scale instead of the engine’s default doubled back-picture scale. Front-facing Oak, Pokédex, and summary callers are explicitly pinned to the front sprite. Any scripted Shedinja gift, including a Starter Picker Oak gift, immediately grants `WONDER_GUARD`, `ELEC TERA ORB`, and `AIR BALLOON` before control returns to the player.
+
+Shedinja now also receives mandatory Gen 1 HP normalization. A living Shedinja is stored and battled at exactly **1 current HP and 1 maximum HP**; a fainted Shedinja remains at 0 current HP with a maximum of 1. The repair runs on save load, scripted gifts, battle start, replacement, battle end, and level-up handling.
+
+## Version 0.3.1 at a glance
 
 | Game | Internal species slot | National Dex number | Battle art | Wonder Guard model |
 |---|---:|---:|---|---|
@@ -58,7 +66,7 @@ Gold also inserts a Shedinja entry into its `gen2Pokedex` data at game-ready tim
 
 ## Installation and package migration
 
-Install the current `shedinja-0.2.3.zip` release through your index or from GitHub Releases. The retired releases used the manifest ID `gen1_shedinja`; because Gen1Recomp treats the renamed `shedinja` package as a distinct mod, remove the old `gen1_shedinja` install and then install `shedinja` once. Future releases will update normally through the launcher.
+Install the current `shedinja-0.3.1.zip` release through your index or from GitHub Releases. The retired package identity was the misspelled `shedninja`; because Gen1Recomp treats the corrected `shedinja` package as a distinct mod, remove the old `shedninja` install and then install `shedinja` once. Future releases update normally through the launcher.
 
 ## Compatibility
 
@@ -84,4 +92,4 @@ See [CREDITS.md](CREDITS.md) for the complete source links, attribution details,
 
 ## Scope and status
 
-This is a public **0.3.0** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, and battle-behavior results before further species or progression mechanics are added.
+This is a public **0.3.1** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, starter, and battle-behavior results before further species or progression mechanics are added.
