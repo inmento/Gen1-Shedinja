@@ -191,10 +191,11 @@ local function normalizeBattlerShedinjaHp(battler, data)
   return true
 end
 
-if GameVersion.get() == "gold" then
-  -- Gold has its own schema, palettes, held-item flow, and encounter maps.
-  -- Keep that implementation isolated so the working Gen 1 branch below is
-  -- never registered or modified during a Gold boot. API 2 publishes the
+local playing = GameVersion.get()
+if GameVersion.generation(playing) == 2 then
+  -- Gold and Silver share this Gen 2 schema, palette, held-item, and encounter
+  -- implementation. Keep it isolated so the Gen 1 branch below is never
+  -- registered or modified during a Gen 2 boot. API 2 publishes the
   -- mutable mod.exports table, so copy the installer handles into it rather
   -- than returning a table the loader intentionally ignores.
   local goldExports = require("mods.shedinja.gold").install(

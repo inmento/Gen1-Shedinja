@@ -2,8 +2,11 @@ local root = assert(arg[1], "project root is required")
 
 package.preload["src.core.GameVersion"] = function()
   return {
-    get = function() return "gold" end,
-    generation = function(id) return (id == "gold" or id == "silver") and 2 or 1 end,
+    get = function() return "silver" end,
+    generation = function(id)
+      assert(id == "silver", "Shedinja must classify the active Silver version")
+      return 2
+    end,
   }
 end
 
@@ -19,7 +22,7 @@ package.preload["mods.shedinja.gold"] = function()
       return {
         SHEDINJA = speciesId,
         WONDER_GUARD = itemId,
-        marker = "gold-entry-exports",
+        marker = "silver-entry-exports",
       }
     end,
   }
@@ -27,12 +30,12 @@ end
 
 local mod = { exports = {} }
 local init = assert(dofile(root .. "/main.lua"), "Shedinja entry module did not return an initializer")
-local returned = assert(init(mod), "Gold Shedinja initializer failed")
-assert(installed, "Gold installer was not invoked")
-assert(returned == mod.exports, "Gold entry must return the API 2 export table")
+local returned = assert(init(mod), "Silver Shedinja initializer failed")
+assert(installed, "Silver must invoke the shared Gen 2 installer")
+assert(returned == mod.exports, "Silver entry must return the API 2 export table")
 assert(mod.exports.SHEDINJA == "SHEDINJA" and mod.exports.WONDER_GUARD == "WONDER_GUARD",
-  "Gold core exports must publish the bridge-facing Shedinja handles")
-assert(mod.exports.marker == "gold-entry-exports",
-  "Gold installer exports must be copied into the API 2 export table")
+  "Silver core exports must publish the bridge-facing Shedinja handles")
+assert(mod.exports.marker == "silver-entry-exports",
+  "Silver installer exports must be copied into the API 2 export table")
 
-print("Gold Shedinja entry export harness: valid")
+print("Silver Shedinja entry export harness: valid")

@@ -9,7 +9,10 @@ local function registry()
 end
 
 package.preload["src.core.GameVersion"] = function()
-  return { get = function() return "yellow" end }
+  return {
+    get = function() return "yellow" end,
+    generation = function(id) return (id == "gold" or id == "silver") and 2 or 1 end,
+  }
 end
 package.preload["mods.shedinja.wonder_guard"] = function()
   return { install = function() end }

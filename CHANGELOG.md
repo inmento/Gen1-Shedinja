@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.5 — Silver support
+
+Shedinja now recognizes **Pokémon Silver** as Generation 2 and loads the same established Gen 2 installer used by Gold. Silver therefore receives the Gen 2 Shedinja species registration, National Dex #292 entry, normal and shiny presentation, held-item Wonder Guard rules, Electric Tera Orb and Air Balloon behavior, Elm’s assistant rift reward, and conditional Gen 2 encounter progression instead of incorrectly falling into the Gen 1 implementation.
+
+This is a root-cause routing fix: the entrypoint now asks Gen1Recomp’s shared `GameVersion.generation()` contract whether the active game is generation 2 rather than treating only the literal `gold` ID as Gen 2. No duplicate Silver data table or compatibility workaround is used. A dedicated Silver entrypoint regression harness and the complete existing Shedinja suite pass.
+
 ## 0.3.4 — Gen 1 sprite roles, encounters, and Wonder Guard hit resolution
 
 This hotfix corrects the live Gen 1 presentation mismatch without renaming either credited PNG or changing any battle scale. Direct inspection and in-game evidence confirm that the physical filenames are reversed relative to their intended roles: `assets/sprites/shedinja_back.png` contains the detailed **face-forward** art and is now used for the Pokédex, Oak, party portrait, wild battles, and trainer-enemy battles; `assets/sprites/shedinja_front.png` contains the hollow-shell **back** art and is now used only for the player’s battle-back presentation. The final `pokemon.sprite` resolver enforces the same mapping, so no later UI path can silently reverse it. This release deliberately does **not** add a renderer-specific compatibility change.

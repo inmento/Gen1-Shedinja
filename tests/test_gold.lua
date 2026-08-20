@@ -18,7 +18,10 @@ local function registry()
 end
 
 package.preload["src.core.GameVersion"] = function()
-  return { get = function() return "gold" end }
+  return {
+    get = function() return "gold" end,
+    generation = function(id) return (id == "gold" or id == "silver") and 2 or 1 end,
+  }
 end
 package.preload["mods.shedinja.gold"] = function()
   return assert(dofile(root .. "/gold.lua"))

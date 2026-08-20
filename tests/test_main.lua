@@ -17,7 +17,10 @@ local function iconRegistry()
 end
 
 package.preload["src.core.GameVersion"] = function()
-  return { get = function() return "red" end }
+  return {
+    get = function() return "red" end,
+    generation = function(id) return (id == "gold" or id == "silver") and 2 or 1 end,
+  }
 end
 package.preload["mods.shedinja.wonder_guard"] = function()
   return { install = function(_, shedinjaId, itemId)
