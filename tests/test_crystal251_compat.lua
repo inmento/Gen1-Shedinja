@@ -20,6 +20,9 @@ end
 package.preload["mods.shedinja.encounters"] = function()
   return { install = function() end }
 end
+package.preload["src.battle.BattleState"] = function()
+  return { newWild = function() return nil end }
+end
 
 local mod = {
   path = root,

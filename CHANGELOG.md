@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.2 — Gen 1 wild reliability, strict one-HP lifecycle, and PKMN icon repair
+
+This corrective release closes the remaining Gen 1 Shedinja paths found in play testing. Wild Shedinja now receives the one-HP normalization **inside the Gen 1 wild-battle factory**, before the opponent sprite and first HP bar are created. Its captured record is therefore already normalized, and the existing save-load, scripted-gift, battle-start, switch-in, battle-end, and level-up protections remain in place. Shedinja’s HP is reset to 1 after every level-up stat recalculation; no other species takes that branch.
+
+The credited Gen 1 front art is now rendered at a Shedinja-only 0.6× enemy/wild battle scale. The source fills its 56×56 canvas more tightly than native opponent sprites, and the prior unscaled rendering overflowed the normal opponent space. Player back art remains at the explicit 1× scale introduced in 0.3.1.
+
+The empty Gen 1 PKMN-screen image was caused by registering a custom icon sheet under a separate label and then mapping Shedinja to that label, a form Gold understands but the Gen 1 party menu does not. The 16×32 two-frame Shedinja icon sheet is now registered directly on the `SHEDINJA` species ID, so party, PC, and selection menus receive the supplied image reliably.
+
 ## 0.3.1 — Core export, Gen 1 starter, sprite, and one-HP corrections
 
 This corrective release fixes five issues found during Gen 1 play testing. The API 2 loader publishes a mod’s mutable `mod.exports` table rather than an initializer’s returned table; core Shedinja now assigns its bridge-facing exports directly to that table in both the Gen 1 and Gold paths. The redundant core-to-bridge optional ordering edge was also removed, leaving the bridge as the sole dependent and ensuring the core completes registration and export publication before the bridge starts.

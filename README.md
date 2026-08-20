@@ -1,6 +1,12 @@
 # Shedinja for Gen1Recomp
 
-**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, strict one-HP behavior, generation-appropriate wild encounters, a deliberately scoped Wonder Guard implementation, and two optional temporary battle mechanics for the player’s active Shedinja. Version **0.3.1** uses the consistent package ID **`shedinja`** and provides one optional compatibility bridge for Crystal 251 in R/B/Y or Expanded Species in Gold, while preserving standalone behavior in every supported game.
+**Shedinja** is a standalone Gen1Recomp species expansion for **Pokémon Red, Blue, Yellow, and Gold**. It adds Shedinja as **National Dex #292** with Bug/Ghost typing, strict one-HP behavior across every lifecycle path, generation-appropriate wild encounters, a deliberately scoped Wonder Guard implementation, and two optional temporary battle mechanics for the player’s active Shedinja. Version **0.3.2** uses the consistent package ID **`shedinja`** and provides one optional compatibility bridge for Crystal 251 in R/B/Y or Expanded Species in Gold, while preserving standalone behavior in every supported game.
+
+## Version 0.3.2 corrective update
+
+Gen 1 wild Shedinja is now normalized to exactly 1 current HP and 1 maximum HP inside the wild-battle factory, before its first opponent HUD and sprite are created. This also ensures a caught wild Shedinja begins life with the correct HP record. Shedinja’s unique post-level-up repair then resets its current and maximum HP to 1 after every ordinary stat recalculation, while leaving every other species unchanged.
+
+The Gen 1 opponent/wild front art now uses a Shedinja-only 0.6× battle scale so the tightly framed credited 56×56 artwork fits the normal opponent slot. The player back remains at its intended 1× scale. The Gen 1 party/PC/selection icon is now registered directly to Shedinja’s species ID, repairing the blank PKMN-screen image.
 
 ## Version 0.3.1 corrective update
 
@@ -66,7 +72,7 @@ Gold also inserts a Shedinja entry into its `gen2Pokedex` data at game-ready tim
 
 ## Installation and package migration
 
-Install the current `shedinja-0.3.1.zip` release through your index or from GitHub Releases. The retired package identity was the misspelled `shedninja`; because Gen1Recomp treats the corrected `shedinja` package as a distinct mod, remove the old `shedninja` install and then install `shedinja` once. Future releases update normally through the launcher.
+Install the current `shedinja-0.3.2.zip` release through your index or from GitHub Releases. The retired package identity was the misspelled `shedninja`; because Gen1Recomp treats the corrected `shedinja` package as a distinct mod, remove the old `shedninja` install and then install `shedinja` once. Future releases update normally through the launcher.
 
 ## Compatibility
 
@@ -92,4 +98,4 @@ See [CREDITS.md](CREDITS.md) for the complete source links, attribution details,
 
 ## Scope and status
 
-This is a public **0.3.1** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, starter, and battle-behavior results before further species or progression mechanics are added.
+This is a public **0.3.2** release. Please report reproducible loading, save, rendering, compatibility-bridge, encounter, Pokédex, starter, and battle-behavior results before further species or progression mechanics are added.

@@ -8,11 +8,11 @@ local function registry()
   }
 end
 
-local registeredIcons, iconOverrides = {}, {}
+local registeredIcons = {}
 local function iconRegistry()
   return {
     register = function(_, id, value) registeredIcons[id] = value end,
-    override = function(_, speciesId, iconId) iconOverrides[speciesId] = iconId end,
+    override = function() error("Gen 1 Shedinja must register its icon directly on the species ID") end,
   }
 end
 
@@ -42,6 +42,13 @@ package.preload["src.battle.Timing"] = function()
     return hp > 0 and 48 or 0
   end }
 end
+local battleState = {
+  newWild = function(game, species, level)
+    local mon = { species = species, level = level, hp = 99, stats = { hp = 99 } }
+    return { data = game.data, enemy = { mon = mon, shownHP = 99, shownPx = 48 } }
+  end,
+}
+package.preload["src.battle.BattleState"] = function() return battleState end
 
 _G.mod = {
   path = root,
@@ -80,12 +87,10 @@ assert(shedinja.spriteFront == root .. "/assets/sprites/shedinja_front.png"
   "Gen 1 Oak and Dex screens must receive mounted Shedinja portrait paths")
 assert(shedinja.dexEntry.kind == "BUG/GHOST",
   "Gen 1 Shedinja Dex category must display BUG/GHOST rather than SHED")
-local icon = assert(registeredIcons.ICON_GEN1_SHEDINJA,
-  "Gen 1 Shedinja party icon was not registered")
+local icon = assert(registeredIcons.SHEDINJA,
+  "Gen 1 Shedinja party icon was not registered directly on the species ID")
 assert(icon.image == root .. "/assets/sprites/shedinja_icon.png" and icon.frames == 2,
   "Gen 1 Shedinja party icon must use the mounted two-frame icon sheet")
-assert(iconOverrides.SHEDINJA == "ICON_GEN1_SHEDINJA",
-  "Gen 1 Shedinja must map its species ID to the registered party icon")
 local dexText = assert(registered.GEN1_SHEDINJA_DEX, "Shedinja Dex text was not registered")
 local expectedDexLines = {
   "HOLLOW BUG SHELL.", "LEGEND SAYS IT", "STEALS THE SPIRIT", "OF THOSE WHO PEEK",
@@ -101,6 +106,8 @@ assert(dexText == table.concat(expectedDexLines, "\n"),
 assert(shedinja.baseStats.hp == 1, "Shedinja must retain base HP 1")
 assert(shedinja.battleScaleBack == 1,
   "Gen 1 Shedinja player-back art must override the default 2x battle scale")
+assert(shedinja.battleScaleFront == 0.6,
+  "Gen 1 Shedinja enemy-front art must fit the ordinary opponent slot")
 assert(shedinja.trueColor == true, "Shedinja sprite art must opt out of 4-shade recoloring")
 local unusedCry = assert(registered.SHEDINJA_UNUSED_CRY_43,
   "Shedinja's dedicated unused $43 cry was not registered")
@@ -123,6 +130,8 @@ assert(type(wraps["pokemon.sprite"]) == "table" and wraps["pokemon.sprite"].prio
   "Shedinja front/back sprite resolver must be installed at final presentation priority")
 assert(type(wraps["script.command"]) == "table" and wraps["script.command"].priority == -20000,
   "post-gift Shedinja repair hook was not registered")
+assert(battleState._shedinjaOneHpWildFactory == true,
+  "Gen 1 wild battle factory must be wrapped for pre-HUD Shedinja normalization")
 
 local data = { pokemon = { SHEDINJA = shedinja } }
 local starter = { species = "SHEDINJA", level = 5, hp = 16, stats = { hp = 16 } }
@@ -164,5 +173,22 @@ local enemy = { mon = enemyMon }
 callbacks["battle.started"]({ battle = { data = data, enemy = enemy } })
 assert(enemyMon.hp == 1 and enemyMon.stats.hp == 1 and enemy.shownHP == 1,
   "enemy battle Shedinja must be normalized to 1 HP at battle start")
+
+local wildBattle = battleState.newWild(game, "SHEDINJA", 8)
+assert(wildBattle.enemy.mon.hp == 1 and wildBattle.enemy.mon.stats.hp == 1
+  and wildBattle.enemy.shownHP == 1 and wildBattle.enemy.shownPx == 48,
+  "wild Shedinja must be normalized before its initial battle HUD is created")
+local ordinaryWild = battleState.newWild(game, "SQUIRTLE", 8)
+assert(ordinaryWild.enemy.mon.hp == 99 and ordinaryWild.enemy.mon.stats.hp == 99,
+  "wild HP normalization must not affect another species")
+
+local leveling = { species = "SHEDINJA", level = 25, hp = 26, stats = { hp = 26 } }
+callbacks["pokemon.level_up"]({ mon = leveling })
+assert(leveling.hp == 1 and leveling.stats.hp == 1,
+  "Shedinja HP must return to 1 immediately after level-up stat recalculation")
+local otherLeveling = { species = "SQUIRTLE", level = 25, hp = 62, stats = { hp = 62 } }
+callbacks["pokemon.level_up"]({ mon = otherLeveling })
+assert(otherLeveling.hp == 62 and otherLeveling.stats.hp == 62,
+  "level-up normalization must not affect another species")
 
 print("main content tests passed")

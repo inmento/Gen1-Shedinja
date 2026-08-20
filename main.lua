@@ -61,14 +61,14 @@ local function registerContent()
     length = 16,
   })
 
-  -- Party/PC menus use a dedicated two-frame 16x32 icon sheet; they do not
-  -- use spriteFront. Register a Gen 1-derived per-species icon explicitly.
-  local iconId = "ICON_GEN1_SHEDINJA"
-  mod.content.icons:register(iconId, {
+  -- Party/PC menus use a dedicated two-frame 16×32 icon sheet; they do not
+  -- use spriteFront. In Gen 1 the registry value must be the image record on
+  -- the species ID itself. Mapping the species to an arbitrary sheet label is
+  -- a Gold-only form and leaves the Gen 1 PKMN screen with no image.
+  mod.content.icons:register(SHEDINJA, {
     image = mod.path .. "/assets/sprites/shedinja_icon.png",
     frames = 2,
   })
-  mod.content.icons:override(SHEDINJA, iconId)
 
   mod.content.pokemon:register(SHEDINJA, {
     id = SHEDINJA,
@@ -91,6 +91,10 @@ local function registerContent()
     -- default. This art is already a full 48×48 back sprite, so 1x keeps it
     -- inside the normal player-side battle space rather than doubling it.
     battleScaleBack = 1,
+    -- The credited front art fills its 56×56 source canvas more tightly than
+    -- native front sprites. Scale only Shedinja's enemy/wild art down to keep
+    -- it in the ordinary opponent slot without altering any other Pokémon.
+    battleScaleFront = 0.6,
     -- Oak's starter Dex preview, the Gen 1 Dex menu, and battle all resolve
     -- these mounted paths. The sprite hook below repeats this mapping at the
     -- final resolver seam so a late UI/battle path override cannot swap sides.
@@ -233,6 +237,23 @@ mod.hooks:wrap("script.command", function(next, ctx, name, args, cmd)
   end
   return result
 end, -20000)
+
+-- Route encounters construct the wild battler and its initial HUD before the
+-- public battle.started event is emitted. Wrap that Gen 1 factory narrowly so
+-- a wild Shedinja is already a genuine 1-HP battler when its image, HUD, and
+-- capture record are first created. No other species takes this branch.
+local BattleState = require("src.battle.BattleState")
+if not BattleState._shedinjaOneHpWildFactory then
+  local nativeNewWild = BattleState.newWild
+  BattleState.newWild = function(game, species, level, opts)
+    local battle = nativeNewWild(game, species, level, opts)
+    if species == SHEDINJA then
+      normalizeBattlerShedinjaHp(battle and battle.enemy, battle and battle.data)
+    end
+    return battle
+  end
+  BattleState._shedinjaOneHpWildFactory = true
+end
 
 mod.events:on("battle.started", function(ev)
   local battle = ev and ev.battle
