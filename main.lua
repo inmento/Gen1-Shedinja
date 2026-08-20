@@ -7,6 +7,8 @@ local GameVersion = require("src.core.GameVersion")
 
 local SHEDINJA = "SHEDINJA"
 local WONDER_GUARD = "WONDER_GUARD"
+local ELEC_TERA_ORB = "ELEC_TERA_ORB"
+local AIR_BALLOON = "AIR_BALLOON"
 local SHEDINJA_UNUSED_CRY_43 = "SHEDINJA_UNUSED_CRY_43"
 
 local function registerContent()
@@ -21,6 +23,21 @@ local function registerContent()
   mod.content.items:register(WONDER_GUARD, {
     id = WONDER_GUARD,
     name = "WONDER GUARD",
+    price = 0,
+    tossable = false,
+  })
+
+  -- Compact labels fit beside the Bag quantity column. The full mechanic is
+  -- explained when the player activates either permanent battle-only item.
+  mod.content.items:register(ELEC_TERA_ORB, {
+    id = ELEC_TERA_ORB,
+    name = "ELEC TERA ORB",
+    price = 0,
+    tossable = false,
+  })
+  mod.content.items:register(AIR_BALLOON, {
+    id = AIR_BALLOON,
+    name = "AIR BALLOON",
     price = 0,
     tossable = false,
   })
@@ -103,17 +120,26 @@ local function grantWonderGuard(game)
   if not save.inventory[WONDER_GUARD] then
     save.inventory[WONDER_GUARD] = 1
   end
+  if not save.inventory[ELEC_TERA_ORB] then
+    save.inventory[ELEC_TERA_ORB] = 1
+  end
+  if not save.inventory[AIR_BALLOON] then
+    save.inventory[AIR_BALLOON] = 1
+  end
 end
 
 if GameVersion.get() == "gold" then
   -- Gold has its own schema, palettes, held-item flow, and encounter maps.
   -- Keep that implementation isolated so the working Gen 1 branch below is
   -- never registered or modified during a Gold boot.
-  return require("mods.shedninja.gold").install(mod, SHEDINJA, WONDER_GUARD)
+  return require("mods.shedninja.gold").install(
+    mod, SHEDINJA, WONDER_GUARD, ELEC_TERA_ORB, AIR_BALLOON)
 end
 
 registerContent()
 require("mods.shedninja.wonder_guard").install(mod, SHEDINJA, WONDER_GUARD)
+require("mods.shedninja.battle_items").installGen1(
+  mod, SHEDINJA, ELEC_TERA_ORB, AIR_BALLOON)
 require("mods.shedninja.encounters").install(mod, SHEDINJA)
 
 mod.events:on("game.ready", function(ev)
@@ -123,6 +149,8 @@ end)
 return {
   SHEDINJA = SHEDINJA,
   WONDER_GUARD = WONDER_GUARD,
+  ELEC_TERA_ORB = ELEC_TERA_ORB,
+  AIR_BALLOON = AIR_BALLOON,
   grantWonderGuard = grantWonderGuard,
   unusedCry43 = SHEDINJA_UNUSED_CRY_43,
 }

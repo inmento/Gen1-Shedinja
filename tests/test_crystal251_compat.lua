@@ -14,6 +14,9 @@ end
 package.preload["mods.shedninja.wonder_guard"] = function()
   return { install = function() end }
 end
+package.preload["mods.shedninja.battle_items"] = function()
+  return { installGen1 = function() end }
+end
 package.preload["mods.shedninja.encounters"] = function()
   return { install = function() end }
 end

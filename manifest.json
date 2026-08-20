@@ -1,7 +1,7 @@
 {
   "id": "shedninja",
   "name": "Shedinja",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "github": "inmento/Gen1-Shedinja",
   "api": 2,
   "entry": "main.lua",
@@ -33,5 +33,5 @@
     "Kanto-Reforged"
   ],
   "affects_link": true,
-  "description": "Standalone Shedinja expansion for Red/Blue/Yellow and Gold: National Dex #292, cross-side Wonder Guard, Gen 1 key-item activation, Gold held-item-gated rift reward and route encounters, credited Gen 1/animated Gen 2 art, plus one optional compatibility bridge for Gold Expanded Species or Gen 1 Crystal 251."
+  "description": "Standalone Shedinja expansion for Red/Blue/Yellow and Gold: National Dex #292, scoped Wonder Guard, free Shedinja-only Electric Tera Orb and Air Balloon battle options, Gold rift progression and held-item route gate, credited Gen 1/animated Gen 2 art, plus one optional compatibility bridge."
 }

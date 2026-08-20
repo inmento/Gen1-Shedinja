@@ -25,6 +25,12 @@ package.preload["mods.shedninja.wonder_guard"] = function()
     assert(itemId == "WONDER_GUARD")
   end }
 end
+package.preload["mods.shedninja.battle_items"] = function()
+  return { installGen1 = function(_, shedinjaId, teraItemId, balloonItemId)
+    assert(shedinjaId == "SHEDINJA")
+    assert(teraItemId == "ELEC_TERA_ORB" and balloonItemId == "AIR_BALLOON")
+  end }
+end
 package.preload["mods.shedninja.encounters"] = function()
   return { install = function(_, shedinjaId)
     assert(shedinjaId == "SHEDINJA")

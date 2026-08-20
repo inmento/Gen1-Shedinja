@@ -47,7 +47,7 @@ end
 local function fixedMoveEffectiveness(ctx)
   local battle, move, target = ctx and ctx.battle, ctx and ctx.move, ctx and ctx.target
   local chart = battle and battle.data and battle.data.type_chart
-  local targetTypes = target and target.curTypes
+  local targetTypes = ctx and ctx.virtualTargetTypes or (target and target.curTypes)
   if not targetTypes and battle and battle.speciesDef and target then
     local def = battle:speciesDef(target)
     targetTypes = def and def.types
@@ -105,14 +105,46 @@ function WonderGuard.install(mod, shedinjaId, itemId)
   end, 100)
 end
 
-function WonderGuard.installGold(mod, shedinjaId, itemId)
+function WonderGuard.installGold(mod, shedinjaId, itemId, battleItems)
+  local function hasElectricTera(ctx)
+    local battle, target = ctx and ctx.battle, ctx and ctx.target
+    return battleItems and battle and target
+      and battleItems.teraElectric(battle, target) or false
+  end
+
+  -- Gold's native formula reads a species definition before mon.types. Supply a
+  -- temporary defensive type overlay beneath the Wonder Guard wrapper, so the
+  -- existing guard receives Electric's matchup result rather than Bug/Ghost's.
+  -- The target has one HP, so an allowed Ground hit needs only remain non-zero;
+  -- the hook preserves the engine's native damage amount while correcting the
+  -- effectiveness used for immunity, messaging, and Wonder Guard.
+  mod.hooks:wrap("battle.damage", function(next, ctx)
+    if hasElectricTera(ctx) then ctx.virtualTargetTypes = { "ELECTRIC" } end
+    local damage, info = next(ctx)
+    if hasElectricTera(ctx) and info then
+      local adjusted = {}
+      for key, value in pairs(info) do adjusted[key] = value end
+      local effectiveness = fixedMoveEffectiveness(ctx)
+      adjusted.effectiveness = effectiveness
+      adjusted.typeMult = effectiveness
+      return damage, adjusted
+    end
+    return damage, info
+  end, 90)
+
+  mod.hooks:wrap("battle.accuracy", function(next, ctx)
+    if hasElectricTera(ctx) then ctx.virtualTargetTypes = { "ELECTRIC" } end
+    return next(ctx)
+  end, 200)
+
   local function protectedTarget(damageCtx)
     local battle = damageCtx and damageCtx.battle
     local target = damageCtx and damageCtx.target
     if not (battle and target and target.species == shedinjaId) then return false end
 
     -- An opposing Shedinja has Wonder Guard as an intrinsic species behavior.
-    -- The player's active Shedinja still needs to hold the item deliberately.
+    -- The player-side held item remains the deliberate Gold activation rule;
+    -- Electric Tera only changes that protected Shedinja's defensive matchup.
     if target == battle.enemy then return true end
     return target == battle.player and target.item == itemId
   end

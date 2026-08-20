@@ -26,11 +26,17 @@ end
 package.preload["mods.shedninja.wonder_guard"] = function()
   return assert(dofile(root .. "/wonder_guard.lua"))
 end
+package.preload["mods.shedninja.battle_items"] = function()
+  return assert(dofile(root .. "/battle_items.lua"))
+end
 package.preload["mods.shedninja.encounters"] = function()
   return assert(dofile(root .. "/encounters.lua"))
 end
 package.preload["src.render.TextBox"] = function()
   return { new = function(_, text, onDone) return { text = text, onDone = onDone } end }
+end
+package.preload["src.ui.gen2.BattleState"] = function()
+  return { useItem = function() return "native" end }
 end
 package.preload["src.battle.gen2.Mon"] = function()
   return {
@@ -141,8 +147,12 @@ assert(events["pokemon.caught"] and #events["pokemon.caught"] == 1, "Gold catch 
 assert(events["pokemon.received"] and #events["pokemon.received"] == 1, "Gold receipt HP repair handler was not registered")
 assert(events["pokemon.level_up"] and #events["pokemon.level_up"] == 1, "Gold level-up HP repair handler was not registered")
 assert(events["script.ended"] and #events["script.ended"] == 2, "Gold script completion handlers were not registered")
-assert(events["battle.started"] and #events["battle.started"] == 1, "Gold initial enemy HP repair handler was not registered")
-assert(events["battle.battler_switched"] and #events["battle.battler_switched"] == 1, "Gold enemy switch HP repair handler was not registered")
+assert(events["battle.started"] and #events["battle.started"] == 2,
+  "Gold battle-start handlers must include temporary-item state and enemy HP repair")
+assert(events["battle.battler_switched"] and #events["battle.battler_switched"] == 2,
+  "Gold switch handlers must include temporary-item reset and enemy HP repair")
+assert(events["battle.ended"] and #events["battle.ended"] == 1,
+  "Gold temporary-item battle-end cleanup handler was not registered")
 
 local game = {
   save = {
@@ -160,6 +170,8 @@ _G.mod.game = game
 ready({ game = game })
 assert(game.save.inventory.WONDER_GUARD == nil,
   "Gold Wonder Guard must not be placed in the bag at boot")
+assert(game.save.inventory.ELEC_TERA_ORB == 1 and game.save.inventory.AIR_BALLOON == 1,
+  "Gold must grant both permanent battle-only Key Items at boot")
 assert(game.save.party[1].hp == 1 and game.save.party[1].maxHp == 1
   and game.save.party[1].stats.hp == 1, "Gold save repair must normalize a living Shedinja to 1 HP")
 assert(game.save.boxes[1][1].hp == 0 and game.save.boxes[1][1].maxHp == 1
@@ -321,6 +333,7 @@ assert(accuracy.callback(function() return true end, {
   move = { id = "EMBER", type = "FIRE", effect = "EFFECT_STATIC_DAMAGE" },
 }) == true, "Gold enemy Shedinja must allow super-effective fixed damage")
 
-assert(installed.SHEDINJA == "SHEDINJA" and installed.WONDER_GUARD == "WONDER_GUARD",
+assert(installed.SHEDINJA == "SHEDINJA" and installed.WONDER_GUARD == "WONDER_GUARD"
+  and installed.ELEC_TERA_ORB == "ELEC_TERA_ORB" and installed.AIR_BALLOON == "AIR_BALLOON",
   "Gold initializer return table is incomplete")
 print("Gold Shedinja content tests passed")

@@ -63,10 +63,11 @@ local function erraticExperience(level)
   return n * n * n * (160 - n) / 100
 end
 
-local function giveWonderGuard(save, itemId)
+local function grantBattleItems(save, teraItemId, balloonItemId)
   if not save then return end
   save.inventory = save.inventory or {}
-  if not save.inventory[itemId] then save.inventory[itemId] = 1 end
+  if not save.inventory[teraItemId] then save.inventory[teraItemId] = 1 end
+  if not save.inventory[balloonItemId] then save.inventory[balloonItemId] = 1 end
 end
 
 local function injectDexEntry(game, speciesId)
@@ -194,7 +195,7 @@ local function queueElmReward(mod, game, speciesId, itemId)
   return true
 end
 
-function Gold.install(mod, speciesId, itemId)
+function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
   -- Gold contains the four original Gen 2 experience curves only. Shedinja's
   -- Gen III Erratic curve is supplied as a small local registry record rather
   -- than silently falling back to Medium Fast.
@@ -280,6 +281,30 @@ function Gold.install(mod, speciesId, itemId)
     needsTarget = false,
   })
 
+  -- These permanent Key Items are selectable in the battle Pack but have no
+  -- field effect. The module-specific BattleState handler supplies their free,
+  -- active-Shedinja-only behavior during battle.
+  mod.content.items:register(teraItemId, {
+    id = teraItemId,
+    name = "ELEC TERA ORB",
+    price = 0,
+    pocket = "KEY_ITEM",
+    tossable = false,
+    needsTarget = false,
+    battleMenu = "ITEMMENU_PARTY",
+    fieldMenu = "ITEMMENU_NOUSE",
+  })
+  mod.content.items:register(balloonItemId, {
+    id = balloonItemId,
+    name = "AIR BALLOON",
+    price = 0,
+    pocket = "KEY_ITEM",
+    tossable = false,
+    needsTarget = false,
+    battleMenu = "ITEMMENU_PARTY",
+    fieldMenu = "ITEMMENU_NOUSE",
+  })
+
   local animationStart = setmetatable({}, { __mode = "k" })
   mod.hooks:wrap("pokemon.sprite", function(next, path, ctx)
     if ctx and ctx.kind == "battle" and ctx.species == speciesId and ctx.side == "front" then
@@ -300,7 +325,10 @@ function Gold.install(mod, speciesId, itemId)
     return next(path, ctx)
   end, 50)
 
-  require("mods.shedninja.wonder_guard").installGold(mod, speciesId, itemId)
+  local battleItems = require("mods.shedninja.battle_items").installGold(
+    mod, speciesId, teraItemId, balloonItemId)
+  require("mods.shedninja.wonder_guard").installGold(
+    mod, speciesId, itemId, battleItems)
   require("mods.shedninja.encounters").installGold(mod, speciesId, function()
     return ownsWonderGuardShedinja(mod.game and mod.game.save, speciesId, itemId)
   end)
@@ -316,6 +344,7 @@ function Gold.install(mod, speciesId, itemId)
   mod.events:on("game.ready", function(ev)
     local game = ev and ev.game
     normalizeSaveShedinjaHp(game and game.save, speciesId)
+    grantBattleItems(game and game.save, teraItemId, balloonItemId)
     injectDexEntry(game, speciesId)
   end)
 
@@ -380,6 +409,8 @@ function Gold.install(mod, speciesId, itemId)
   return {
     SHEDINJA = speciesId,
     WONDER_GUARD = itemId,
+    ELEC_TERA_ORB = teraItemId,
+    AIR_BALLOON = balloonItemId,
     injectDexEntry = function(game)
       injectDexEntry(game, speciesId)
     end,

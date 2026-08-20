@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.2.3 — Electric Tera Orb and Air Balloon battle options
+
+This release adds two permanent, reusable **battle-only** items inspired by the Electric Tera + Air Balloon Shedinja interaction. They are deliberately bounded to reproduce a specific defensive choice without creating free generic item use.
+
+### The two items
+
+`ELEC TERA ORB` and `AIR BALLOON` are automatically added to new and existing saves and restored if missing on a later load. In Red, Blue, and Yellow they appear as non-tossable Bag items. In Gold they appear as non-tossable Key Items, while Gold’s existing `WONDER_GUARD` item remains a separate normal Bag item that can be held, given, or removed exactly as before.
+
+Both new items work only while the **player’s currently active Pokémon is Shedinja** and only during a battle. A valid activation is free: it closes the item screen, displays its result, and returns to the battle command menu without consuming the player’s turn. This allows the player to activate the Orb, the Balloon, or both, then still select a move, switch, or run. Trying to use an item on another species, outside battle, or a second time during the same field entry does not apply an effect.
+
+`ELEC TERA ORB` temporarily makes the player’s active Shedinja use **Electric** as its defensive type. In Gen 1 this is a real active-battler type replacement. In Gold it is a scoped defensive type overlay because Gold’s native formula reads the base species type first. In both games the effect is used by the normal type-effectiveness and Wonder Guard checks. The Orb does not change an enemy, wild, benched, or boxed Shedinja.
+
+`AIR BALLOON` temporarily makes Ground-type moves miss the player’s active Shedinja before damage is applied. It does not replace Gold’s held `WONDER_GUARD`, it does not grant effects to another Pokémon, and it has no separate pop mechanic: a Ground move prevented before connecting cannot pop it.
+
+Both temporary effects are cleared when the player’s Shedinja leaves the field, including an ordinary switch, a forced replacement, or a faint-driven replacement. They are also cleared at battle end. Sending Shedinja out again permits a fresh one-time activation of each item. The effects are battle-local rather than save data, so they cannot persist through battle completion or a save reload.
+
+### Generation-specific Wonder Guard behavior
+
+Red, Blue, and Yellow retain the persistent `WONDER_GUARD` Bag-token rule for every active Shedinja on either side. Electric Tera and Air Balloon are restricted to the player’s active Shedinja only.
+
+Gold retains its deliberate held-item rule for the player: the player’s active Shedinja must still hold `WONDER_GUARD` for Wonder Guard to activate. Electric Tera changes the defensive matchup used by that existing protection; it does not bypass the held-item requirement or enable the conditional route encounters by itself. Enemy Shedinja retains its intrinsic ordinary-damage Wonder Guard behavior.
+
+Indirect and typeless damage remains intentionally outside Wonder Guard. Gen 1 still permits poison, Toxic, burn, Leech Seed, and confusion self-damage; Gold also has its native indirect counterplay such as Sandstorm and Spikes.
+
+The release was validated with the complete Shedinja suite: core registration, encounters, Gen 1 Wonder Guard, the new free-item and reset lifecycle harness, Gold Electric-overlay and fixed-damage coverage, Gold progression and encounter gates, Crystal 251 compatibility, cry schema, manifest validation against Gen1Recomp 0.2.10, and Lua syntax checks.
+
 ## 0.2.2 — Cross-side Wonder Guard and Gold rift progression
 
 This update makes Wonder Guard a complete **Shedinja battle rule** rather than a player-only effect, while keeping the item system as the activation mechanism appropriate to each generation.
