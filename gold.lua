@@ -243,7 +243,10 @@ function Gold.install(mod, speciesId, itemId, teraItemId, balloonItemId)
       { level = 25, move = "SPITE" },
       { level = 31, move = "CONFUSE_RAY" },
       { level = 38, move = "SHADOW_BALL" },
-      { level = 45, move = "GRUDGE" },
+      -- GRUDGE was introduced in Generation III and is absent from Gold and
+      -- Silver's move registry. DESTINY_BOND is the legal Generation II
+      -- Ghost move for this late-game thematic slot.
+      { level = 45, move = "DESTINY_BOND" },
     },
     evolutions = {},
     eggGroups = { "EGG_MINERAL", "EGG_MINERAL" },

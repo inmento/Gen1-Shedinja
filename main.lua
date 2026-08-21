@@ -108,7 +108,10 @@ local function registerContent()
     learnset = {
       { level = 5, move = "SAND_ATTACK" },
       { level = 13, move = "FURY_SWIPES" },
-      { level = 25, move = "SPITE" },
+      -- SPITE is a Generation II move and therefore cannot be referenced by
+      -- Red, Blue, or Yellow's move registry. NIGHT_SHADE is an existing
+      -- Generation I Ghost move and preserves this Ghost-themed level slot.
+      { level = 25, move = "NIGHT_SHADE" },
       { level = 37, move = "CONFUSE_RAY" },
     },
     tmhm = {

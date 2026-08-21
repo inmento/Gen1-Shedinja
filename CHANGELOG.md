@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.6 — Legal generation-specific move data and Gen1Recomp 0.2.15 validation
+
+This update corrects two root-cause content errors exposed by loading Shedinja through the complete current game datasets. Red, Blue, and Yellow do not define **SPITE**, because it is a Generation II move; Shedinja’s Gen 1 level-25 slot now uses the legal Generation I Ghost move **NIGHT SHADE**. Gold and Silver do not define **GRUDGE**, because it is a Generation III move; Shedinja’s Gen 2 level-45 slot now uses the legal Generation II Ghost move **DESTINY BOND**. The Gold/Silver **SPITE** slot remains unchanged because it is legal there.
+
+The mod was then loaded against the full Red and Gold generated data under Gen1Recomp **0.2.15**, and its complete unit, schema, manifest, sprite, encounter, Wonder Guard, battle-item, and Gold/Silver test suite passed. This release is a real content-reference correction, not a workaround for the new engine menus.
+
 ## 0.3.5 — Silver support
 
 Shedinja now recognizes **Pokémon Silver** as Generation 2 and loads the same established Gen 2 installer used by Gold. Silver therefore receives the Gen 2 Shedinja species registration, National Dex #292 entry, normal and shiny presentation, held-item Wonder Guard rules, Electric Tera Orb and Air Balloon behavior, Elm’s assistant rift reward, and conditional Gen 2 encounter progression instead of incorrectly falling into the Gen 1 implementation.

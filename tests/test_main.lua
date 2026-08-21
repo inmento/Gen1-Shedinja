@@ -114,6 +114,9 @@ assert(lineCount == 4, "Shedinja Dex text must stay on one four-line page")
 assert(dexText == table.concat(expectedDexLines, "\n"),
   "Shedinja Dex text must use its approved explicit line breaks")
 assert(shedinja.baseStats.hp == 1, "Shedinja must retain base HP 1")
+assert(#shedinja.learnset == 4 and shedinja.learnset[3].level == 25
+  and shedinja.learnset[3].move == "NIGHT_SHADE",
+  "Gen 1 Shedinja must use the legal NIGHT SHADE move instead of Gen 2-only SPITE")
 assert(shedinja.battleScaleBack == 1,
   "Gen 1 Shedinja player-back art must override the default 2x battle scale")
 assert(shedinja.battleScaleFront == 0.6,

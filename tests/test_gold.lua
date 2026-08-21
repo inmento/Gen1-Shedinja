@@ -132,8 +132,8 @@ assert(iconOverrides.SHEDINJA == "ICON_GEN1_SHEDINJA",
   "Gold Shedinja species was not associated with its party icon")
 assert(shedinja.eggSteps == 15 and shedinja.eggGroups[1] == "EGG_MINERAL"
   and shedinja.eggGroups[2] == "EGG_MINERAL", "Gold breeding data is incorrect")
-assert(#shedinja.levelMoves == 10 and shedinja.levelMoves[10].move == "GRUDGE",
-  "Gold level-up move data is incomplete")
+assert(#shedinja.levelMoves == 10 and shedinja.levelMoves[10].move == "DESTINY_BOND",
+  "Gold level-up move data must use a legal Generation II move")
 
 local palettes = assert(patched.pokemon and patched.pokemon.SHEDINJA,
   "Gold normal/shiny palette rows were not registered")
